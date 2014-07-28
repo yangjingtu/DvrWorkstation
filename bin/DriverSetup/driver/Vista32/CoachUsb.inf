@@ -1,0 +1,277 @@
+;
+; CoachUsb.inf
+; USB Class Driver for Digital Camera with Coach Chipset
+; Windows XP
+; Copyright (C) 2009, FotoNation
+;
+
+; ===================== Version section =======================
+
+[Version]
+Signature="$CHICAGO$"
+Class=Image
+ClassGUID={6bdd1fc6-810f-11d0-bec7-08002be2092f}
+Provider=%Provider%
+CatalogFile=CoachUsb.cat
+DriverVer=03/10/2009, 4.82.0.0
+
+; ====================== Files section ========================
+
+[SourceDisksNames]
+;1=%InstallDisk%  ; this doesn't work on win98
+1=%InstallDisk%,,,
+
+[SourceDisksFiles]
+CoachUsb.sys=1
+CoachWrp.dll=1
+CoachWia.dll=1
+
+[DestinationDirs]
+Files.Sys = 10,System32\Drivers
+Files.Dll = 11
+Files.Wia = 11
+
+[Files.Sys]
+CoachUsb.sys
+
+[Files.Dll]
+CoachWrp.dll
+
+[Files.Wia]
+CoachWia.dll
+
+; ================== Manufacturer & Models section ============
+
+[Manufacturer]
+%Mfg.Desc% = Models
+
+[Models]
+%DevDesc% = CamUsb, USB\VID_0595&PID_4343
+;%Coach2.DevDesc% = CamUsb, USB\VID_0595&PID_4344
+
+; ================== Win9x Device Install section =============
+
+[CamUsb]
+CopyFiles = Files.Sys,Files.Dll,Files.Wia,Files.Gdi
+AddReg    = CamUsb.AddReg, CamUsb.W9x.AddReg
+
+;SubClass         = StillImage
+;DeviceData       = CamUsb.DeviceData
+;UninstallSection = CamUsb.Uninstall
+;ICMProfiles      = "sRGB Color Space Profile.icm"
+;
+; Device type
+; 1 = scanner
+; 2 = camera
+; 3 = video
+;DeviceType=2
+;
+; Capabilities is a mask:
+; 0x01 = Device generates events
+; 0x02 = Polling needed
+; 0x04 = Generate event when device installed
+; 0x08 = Enable the "auto" port option
+; 0x10 = WIA capable driver
+; 0x20 = Driver has reduced functionality
+;Capabilities=0x00000015
+;
+; Hides port selection page in the wizard and on the
+; device property sheet.
+;PortSelect=No
+
+[CamUsb.W9x.AddReg]
+HKR,,DevLoader,,*ntkern
+HKR,,NTMPDriver,,CoachUsb.sys
+
+; ================== WinNT Device Install section =============
+
+[CamUsb.NT]
+CopyFiles = Files.Sys,Files.Dll,Files.Wia
+AddReg    = CamUsb.AddReg
+
+; CopyINF works only for XP and later
+;CopyINF   = CoachVid.inf
+;CopyINF   = CoachAud.inf
+
+;SubClass         = StillImage
+;DeviceData       = CamUsb.DeviceData
+;UninstallSection = CamUsb.Uninstall
+ICMProfiles      = "sRGB Color Space Profile.icm"
+;
+; Device type
+; 1 = scanner
+; 2 = camera
+; 3 = video
+DeviceType=2
+;
+; Capabilities is a mask:
+; 0x01 = Device generates events
+; 0x02 = Polling needed
+; 0x04 = Generate event when device installed
+; 0x08 = Enable the "auto" port option
+; 0x10 = WIA capable driver
+; 0x20 = Driver has reduced functionality
+Capabilities=0x00000015
+;
+; Hides port selection page in the wizard and on the
+; device property sheet.
+PortSelect=No
+
+[CamUsb.NT.Services]
+AddService = %CamUsb.SvcName%,%SPSVCINST_ASSOCSERVICE%,CamUsb.NT.AddService,CamUsb.NT.EventLog
+
+[CamUsb.NT.AddService]
+DisplayName    = %CamUsb.SvcDesc%
+ServiceType    = %SERVICE_KERNEL_DRIVER%
+StartType      = %SERVICE_DEMAND_START%
+ErrorControl   = %SERVICE_ERROR_NORMAL%
+ServiceBinary  = %12%\CoachUsb.sys
+
+[CamUsb.NT.EventLog]
+AddReg = CamUsb.NT.EventLog.AddReg
+
+[CamUsb.NT.EventLog.AddReg]
+HKR,,EventMessageFile,%REG_EXPAND_SZ%,"%%SystemRoot%%\System32\drivers\CoachUsb.sys"
+HKR,,TypesSupported,%REG_DWORD%,7
+
+; ================= Common Device Install section =============
+
+[CamUsb.AddReg]
+
+HKR,Parameters,EnableStill,0x00010001,0
+HKR,Parameters,EnableVC,0x00010001,0
+HKR,Parameters,EnableAudio,0x00010001,0
+
+; CompressionRatio, valid range 10 .. 170
+; This will configure the compression ratio for a new
+; still image to be captured with.
+; 10 means ratio=1.0, 45 means ratio=4.5 ...
+HKR,Parameters,CompressionRatio,0x00010001,75
+
+; PreCaptureInterval, valid range 0 .. 30000 (milliseconds)
+; This will configure the pre capture delay for still image.
+HKR,Parameters,PreCaptureInterval,0x00010001,2500
+
+; CaptureSaveTimeout, valid range 5000 .. 30000 (milliseconds)
+; Maximum time allowed to save the image during still capture.
+HKR,Parameters,CaptureSaveTimeout,0x00010001,15000
+
+; EnableWB, enable white balance control during still capture.
+;  0 - disable
+;  1 - enable
+HKR,Parameters,EnableWB,0x00010001,1
+
+; EnableI43ExclusiveMode enable Exclusive mode for I43 Interface.
+;  0 - disable (used only for chipset test)
+;  1 - enable  (for normal usage)
+HKR,Parameters,EnableI43ExclusiveMode,0x00010001,1
+
+; StartupIdleMode, for chipset testing. Do NOT change!
+HKR,Parameters,StartupIdleMode,0x00010001,1
+
+; MinViewEvttEntry, valid range 0 .. MaxViewEvttEntry
+; The minimal index in EVTT table that corresponds to maximal brightenss
+HKR,Parameters,MinViewEvttEntry,0x00010001,0
+
+; MaxViewEvttEntry, valid range MinViewEvttEntry .. 127
+; The maximal index in EVTT table that corresponds to minimal brightenss
+HKR,Parameters,MaxViewEvttEntry,0x00010001,127
+
+; VideoExposureDeviation, valid range 0 .. 31
+; This will configure the video autobrightness.
+HKR,Parameters,VideoExposureDeviation,0x00010001,15
+
+; VideoCompressionRatio, valid range 10 .. 170
+; This will configure the default compression ratio of video stream.
+; 10 means ratio=1.0, 45 means ratio=4.5 ...
+HKR,Parameters,VideoCompressionRatio,0x00010001,75
+
+; VideoEdgeEnhancement, valid range 0 .. 255
+; This will configure the edge enhancement of video stream.
+HKR,Parameters,VideoEdgeEnhancement,0x00010001,2
+
+; FrameRate, valid range 1 .. 200 (frames per second)
+; Should be defined for each video mode.
+; If video mode not present then ignored.
+HKR,Parameters\VideoModes\0,FrameRate,0x00010001,22
+HKR,Parameters\VideoModes\1,FrameRate,0x00010001,30
+HKR,Parameters\VideoModes\2,FrameRate,0x00010001,10
+
+; MinFrameRate, valid range 1 .. FrameRate (frames per second)
+; Should be defined for each video mode.
+; If video mode not present then ignored.
+HKR,Parameters\VideoModes\0,MinFrameRate,0x00010001,1
+HKR,Parameters\VideoModes\1,MinFrameRate,0x00010001,1
+HKR,Parameters\VideoModes\2,MinFrameRate,0x00010001,1
+
+;
+; HardwareConfig entry indicates what type of connection
+; the device uses. First number should always be 1. The
+; second number varies: 1=unknown, 2=SCSI, 4=USB,
+; 8=serial, 16=parallel
+HKR,,HardwareConfig,1,1
+;
+; The GUID in the following entries must match the class ID
+; of the STI/WIA minidriver
+HKR,,USDClass,,"{B70B3157-C8E8-3A90-B484-A2FE390E7146}"
+HKCR,CLSID\{B70B3157-C8E8-3A90-B484-A2FE390E7146},,,"Camera WIA Minidriver"
+HKCR,CLSID\{B70B3157-C8E8-3A90-B484-A2FE390E7146}\InProcServer32,,,%11%\CoachWia.dll
+HKCR,CLSID\{B70B3157-C8E8-3A90-B484-A2FE390E7146}\InProcServer32,ThreadingModel,,Both
+
+
+[CamUsb.DeviceData]
+Server=local
+;
+; Indicates COM component to load for UI.
+; Use {4DB1AD10-3391-11D2-9A33-00C04FA36145} for
+; default WIA UI.
+UI Class ID={4DB1AD10-3391-11D2-9A33-00C04FA36145}
+;
+; The DLL that gives access to the device.
+LowerDll=CoachWrp.dll
+
+; ==================== String macro section ===================
+
+[Strings]
+
+; ======== Handy macro substitutions (non-localizable) ========
+
+; Service Type 
+SERVICE_KERNEL_DRIVER       = 0x1
+SERVICE_FILE_SYSTEM_DRIVER  = 0x2
+SERVICE_ADAPTER             = 0x4
+
+; Driver Start Code
+SERVICE_BOOT_START     = 0
+SERVICE_SYSTEM_START   = 1
+SERVICE_AUTO_START     = 2
+SERVICE_DEMAND_START   = 3
+SERVICE_DISABLED       = 4
+
+; Error Control Level
+SERVICE_ERROR_IGNORE   = 0
+SERVICE_ERROR_NORMAL   = 1
+SERVICE_ERROR_SEVERE   = 2
+SERVICE_ERROR_CRITICAL = 3
+
+SPSVCINST_ASSOCSERVICE = 0x00000002
+
+; Registry Value Type (don't use on Win 98/ME)
+REG_EXPAND_SZ          = 0x00020000
+REG_DWORD              = 0x00010001
+REG_MULTI_SZ           = 0x00010000
+
+; ======= Private macro substitutions (non-localizable) =======
+; Modification of those strings can cause incorrect installation
+
+CamUsb.SvcName  = "CoachUsb"
+CamUsb.SvcDesc  = "Coach Digital Camera on USB"
+
+; ============== Localizable macro substitutions ==============
+
+InstallDisk       = "Install disk with drivers"
+Provider          = "FotoNation"
+
+Mfg.Desc = "Zoran"
+DevDesc = "Coach Digital Camera"
+

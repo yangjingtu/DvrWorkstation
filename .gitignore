@@ -1,0 +1,37 @@
+#ignore *.o and *.a
+*.[oa]
+
+#ignore *.b and *.B but my.b
+*.[bB]
+!my.b
+
+#ignore dbg file and dbg dir
+dbg
+
+#ignore dir dbg and no ignore dbg file
+dbg/
+
+#ignore *.ilk *.pdb *.scc *.zip *.rar
+*.ilk
+*.pdb
+*.scc
+*.zip
+!skin.zip
+*.rar
+*.exp
+*.svn
+*.filters
+*.user
+*.vspscc
+*.suo
+*.sdf
+*.aps
+*.obj
+
+#ignore dir
+release/
+Release/
+setup/
+tools/
+debug/
+Debug/
