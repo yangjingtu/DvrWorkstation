@@ -27,6 +27,8 @@ dbg/
 *.sdf
 *.aps
 *.obj
+*.log
+*.opensdf
 
 #ignore dir
 release/
@@ -35,3 +37,4 @@ setup/
 tools/
 debug/
 Debug/
+output/
