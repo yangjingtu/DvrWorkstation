@@ -5,18 +5,9 @@ Project("{8BC9CEB8-8B4A-11D0-8D11-00A0C91BC942}") = "WellDVR2", "WellDVR2\WellDV
 EndProject
 Project("{8BC9CEB8-8B4A-11D0-8D11-00A0C91BC942}") = "WellDVRConfig", "WelDVRConfig\WellDVRConfig.vcxproj", "{42A08936-AD80-4F87-A8A5-EFA50E4FB0ED}"
 EndProject
+Project("{8BC9CEB8-8B4A-11D0-8D11-00A0C91BC942}") = "WellDvrTool", "WellDvrTool\WellDvrTool.vcxproj", "{F4A5DEAC-754A-40C7-A920-9A1E7E3988D2}"
+EndProject
 Global
-	GlobalSection(SourceCodeControl) = preSolution
-		SccNumberOfProjects = 3
-		SccLocalPath0 = .
-		SccProjectUniqueName1 = WellDVR2\\WellDVR2.vcxproj
-		SccProjectName1 = \u0022$/WellDVR\u0022,\u0020APKEAAAA
-		SccLocalPath1 = ..
-		SccProjectFilePathRelativizedFromConnection1 = src\\WellDVR2\\
-		SccProjectUniqueName2 = WelDVRConfig\\WellDVRConfig.vcxproj
-		SccProjectName2 = \u0022$/WellDVR/src/WelDVRConfig\u0022,\u0020WOLEAAAA
-		SccLocalPath2 = WelDVRConfig
-	EndGlobalSection
 	GlobalSection(SolutionConfigurationPlatforms) = preSolution
 		Debug|Mixed Platforms = Debug|Mixed Platforms
 		Debug|Win32 = Debug|Win32
@@ -76,6 +67,30 @@ Global
 		{42A08936-AD80-4F87-A8A5-EFA50E4FB0ED}.UnicodeRelease|Win32.Build.0 = Release|Win32
 		{42A08936-AD80-4F87-A8A5-EFA50E4FB0ED}.UnicodeRelease|x86.ActiveCfg = Release|Win32
 		{42A08936-AD80-4F87-A8A5-EFA50E4FB0ED}.UnicodeRelease|x86.Build.0 = Release|Win32
+		{F4A5DEAC-754A-40C7-A920-9A1E7E3988D2}.Debug|Mixed Platforms.ActiveCfg = Debug|Win32
+		{F4A5DEAC-754A-40C7-A920-9A1E7E3988D2}.Debug|Mixed Platforms.Build.0 = Debug|Win32
+		{F4A5DEAC-754A-40C7-A920-9A1E7E3988D2}.Debug|Win32.ActiveCfg = Debug|Win32
+		{F4A5DEAC-754A-40C7-A920-9A1E7E3988D2}.Debug|Win32.Build.0 = Debug|Win32
+		{F4A5DEAC-754A-40C7-A920-9A1E7E3988D2}.Debug|x86.ActiveCfg = Debug|Win32
+		{F4A5DEAC-754A-40C7-A920-9A1E7E3988D2}.Debug|x86.Build.0 = Debug|Win32
+		{F4A5DEAC-754A-40C7-A920-9A1E7E3988D2}.Release|Mixed Platforms.ActiveCfg = Release|Win32
+		{F4A5DEAC-754A-40C7-A920-9A1E7E3988D2}.Release|Mixed Platforms.Build.0 = Release|Win32
+		{F4A5DEAC-754A-40C7-A920-9A1E7E3988D2}.Release|Win32.ActiveCfg = Release|Win32
+		{F4A5DEAC-754A-40C7-A920-9A1E7E3988D2}.Release|Win32.Build.0 = Release|Win32
+		{F4A5DEAC-754A-40C7-A920-9A1E7E3988D2}.Release|x86.ActiveCfg = Release|Win32
+		{F4A5DEAC-754A-40C7-A920-9A1E7E3988D2}.Release|x86.Build.0 = Release|Win32
+		{F4A5DEAC-754A-40C7-A920-9A1E7E3988D2}.UnicodeDebug|Mixed Platforms.ActiveCfg = Debug|Win32
+		{F4A5DEAC-754A-40C7-A920-9A1E7E3988D2}.UnicodeDebug|Mixed Platforms.Build.0 = Debug|Win32
+		{F4A5DEAC-754A-40C7-A920-9A1E7E3988D2}.UnicodeDebug|Win32.ActiveCfg = Debug|Win32
+		{F4A5DEAC-754A-40C7-A920-9A1E7E3988D2}.UnicodeDebug|Win32.Build.0 = Debug|Win32
+		{F4A5DEAC-754A-40C7-A920-9A1E7E3988D2}.UnicodeDebug|x86.ActiveCfg = Debug|Win32
+		{F4A5DEAC-754A-40C7-A920-9A1E7E3988D2}.UnicodeDebug|x86.Build.0 = Debug|Win32
+		{F4A5DEAC-754A-40C7-A920-9A1E7E3988D2}.UnicodeRelease|Mixed Platforms.ActiveCfg = Release|Win32
+		{F4A5DEAC-754A-40C7-A920-9A1E7E3988D2}.UnicodeRelease|Mixed Platforms.Build.0 = Release|Win32
+		{F4A5DEAC-754A-40C7-A920-9A1E7E3988D2}.UnicodeRelease|Win32.ActiveCfg = Release|Win32
+		{F4A5DEAC-754A-40C7-A920-9A1E7E3988D2}.UnicodeRelease|Win32.Build.0 = Release|Win32
+		{F4A5DEAC-754A-40C7-A920-9A1E7E3988D2}.UnicodeRelease|x86.ActiveCfg = Release|Win32
+		{F4A5DEAC-754A-40C7-A920-9A1E7E3988D2}.UnicodeRelease|x86.Build.0 = Release|Win32
 	EndGlobalSection
 	GlobalSection(SolutionProperties) = preSolution
 		HideSolutionNode = FALSE

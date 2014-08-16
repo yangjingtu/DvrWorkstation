@@ -5,6 +5,7 @@
 
 #include "DvrFactory.h"
 #include "../WellDVR2/dvr/interface.h"
+#include "resource.h"
 
 
 #define CMD_VID_PID _T("VID_0595&PID_4343")
@@ -118,6 +119,8 @@ LRESULT  CDvrToolUI::OnCreate(UINT uMsg, WPARAM wParam, LPARAM lParam, BOOL& bHa
 	ASSERT(pRoot && "Failed to parse XML");
 	m_pm.AttachDialog(pRoot);
 	m_pm.AddNotifier(this);
+
+	this->SetIcon(IDI_WELLDVRTOOL);
 
 	Init();
 	return 0;
@@ -297,11 +300,14 @@ LRESULT CDvrToolUI::OnMyDeviceChange(WPARAM wParam, LPARAM lParam)
 			pDevInf = (PDEV_BROADCAST_DEVICEINTERFACE)pHdr;
 			if( wParam == DBT_DEVICEARRIVAL ) // add device
 			{
-				AddUsbDevice(pDevInf->dbcc_name);
+				AddUsbDevice(pDevInf->dbcc_name, lParam);
+
 			}
 			else if( wParam == DBT_DEVICEREMOVECOMPLETE ) // remove device
 			{
 				RemoveUsbDevice(pDevInf->dbcc_name);
+				pHdr->dbch_devicetype == DBT_DEVTYP_VOLUME;
+				
 			}
 			break;
 		case DBT_DEVTYP_HANDLE:
@@ -342,6 +348,9 @@ void CDvrToolUI::EnableUI(bool bEnable)
 	m_btnPoliceId->SetEnabled(bEnable);
 	m_btnDir->SetEnabled(bEnable);
 	m_btnSync->SetEnabled(bEnable);
+
+	m_btnCheck->SetEnabled(!bEnable);
+	m_edtPwd->SetEnabled(!bEnable);
 }
 
 void CDvrToolUI::OnClickBtnCheck()
@@ -357,7 +366,12 @@ void CDvrToolUI::OnClickBtnCheck()
 	//读取信息并显示
 	if(m_pDvr == NULL)
 	{
-		return;
+		m_pDvr = CDvrFactory::GetDvr();
+		if(m_pDvr == NULL)
+		{
+			m_lblMsg->SetText(_T("没有检测到设备！"));
+			return;
+		}
 	}
 
 	CString strDevPwd;
@@ -384,9 +398,9 @@ void CDvrToolUI::OnClickBtnCheck()
 	//读取ID
 	CString strT;
 	m_pDvr->GetIDEx(strT);
-	m_edtPoliceId->SetText(strT.GetBuffer());
-	m_pDvr->GetMachinID(strT);
 	m_edtDevId->SetText(strT.GetBuffer());
+	m_pDvr->GetMachinID(strT);
+	m_edtPoliceId->SetText(strT.GetBuffer());
 }
 
 void CDvrToolUI::OnClickBtnPwd()
@@ -410,11 +424,14 @@ void CDvrToolUI::OnClickBtnPwd()
 	{
 		if(m_pDvr->SetPwd(strPwd.GetData()))
 		{
-			m_lblMsg->SetText(_T("设置密码成功!"));
+			m_lblMsg->SetText(_T("修改密码成功!"));
+			EnableUI(false);
+			m_edtPwd->SetText(_T(""));
+			m_edtPwd->SetFocus();
 		}
 		else
 		{
-			m_lblMsg->SetText(_T("设备密码失败!"));
+			m_lblMsg->SetText(_T("修改密码失败!"));
 		}
 	}
 	else
@@ -434,11 +451,11 @@ void CDvrToolUI::OnClickBtnDevId()
 	{
 		if(m_pDvr->SetIDEx(strId.GetData()))
 		{
-			m_lblMsg->SetText(_T("设置设备ID成功！"));
+			m_lblMsg->SetText(_T("修改设备ID成功！"));
 		}
 		else
 		{
-			m_lblMsg->SetText(_T("设置设备ID失败！"));
+			m_lblMsg->SetText(_T("修改设备ID失败！"));
 		}
 	}
 	else
@@ -457,11 +474,11 @@ void CDvrToolUI::OnClickBtnPoliceId()
 	{
 		if(m_pDvr->SetMachinID(strId.GetData()))
 		{
-			m_lblMsg->SetText(_T("设备警员ID成功！"));
+			m_lblMsg->SetText(_T("修改警员ID成功！"));
 		}
 		else
 		{
-			m_lblMsg->SetText(_T("设备警员ID失败！"));
+			m_lblMsg->SetText(_T("修改警员ID失败！"));
 		}
 	}
 	else
@@ -479,7 +496,9 @@ void CDvrToolUI::OnClickBtnDir()
 	}
 
 	if(m_pDvr->SetMassEx())
+	{
 		m_lblMsg->SetText(_T("枚举设备成功！"));
+	}
 	else
 	{
 		m_lblMsg->SetText(_T("枚举设备失败！"));
@@ -561,7 +580,7 @@ void CDvrToolUI::RegisgerDvr()
 
 
 //USB设备插入
-void CDvrToolUI::AddUsbDevice( const CString& strName )
+void CDvrToolUI::AddUsbDevice( const CString& strName, LPARAM lparam)
 {
 	CString strVPID = GetVID_PIDString(strName, _T('#'));
 	if( strVPID != CMD_VID_PID && strVPID != MASS_VID_PID)
@@ -570,20 +589,23 @@ void CDvrToolUI::AddUsbDevice( const CString& strName )
 		return;
 	}
 
-	m_pDvr = CDvrFactory::GetDvr();
-	if(m_pDvr == NULL)
-	{
-		m_lblMsg->SetText(_T("无法识别DVR设备，请重新插拔！"));
-		return;
-	}
-
 	if( strVPID == CMD_VID_PID )
 	{
 		m_lblMsg->SetText(_T("检测到DVR设备插入"));
-
+		m_pDvr = CDvrFactory::GetDvr();
+		if(m_pDvr == NULL)
+		{
+			m_lblMsg->SetText(_T("无法识别DVR设备，请重新插拔！"));
+			return;
+		}
 	}
 	else if( strVPID == MASS_VID_PID )
 	{
+		CString diskName = GetDiskName(lparam);
+		if(!diskName.IsEmpty())
+		{
+			OpenDisk(diskName);
+		}
 		m_lblMsg->SetText(_T("枚举成U盘成功！"));
 	}
 }
@@ -603,16 +625,15 @@ void CDvrToolUI::RemoveUsbDevice( const CString& strName )
 		m_pDvr = NULL;
 	}
 
-	m_lblMsg->SetText(_T("检测到DVR设备拔掉"));
-
 	if( strVPID == CMD_VID_PID )
 	{	
-		
+		m_lblMsg->SetText(_T("检测到DVR设备拔掉"));
 	}
 	else if( strVPID == MASS_VID_PID )
 	{
-		
+		m_lblMsg->SetText(_T("检测到存储设备拔掉"));
 	}
+	EnableUI(false);
 }
 
 //获取VID_PID
@@ -624,4 +645,48 @@ CString CDvrToolUI::GetVID_PIDString(const CString &str,  wchar_t  chSplit )
 	CString s2 = s1.Left(pos2);
 	s2.MakeUpper();
 	return s2;
+}
+
+CString CDvrToolUI::GetDiskName(LPARAM lParam)
+{
+	PDEV_BROADCAST_VOLUME pDevVolume = (DEV_BROADCAST_VOLUME*)lParam;
+	DWORD mask = pDevVolume->dbcv_unitmask;
+
+	TCHAR diskName[MAX_PATH] = {0};
+	int i = 0;
+	for ( i = 0; i < 26; i++)
+	{
+		if((mask >> i) == 1)
+		{
+			//获取盘符
+			diskName[0] = 'A' + i;
+			diskName[1] = '\0';
+			_tcscat_s(diskName, TEXT(":\\"));
+			break;
+		}
+	}
+
+	if(i == 26)
+	{
+		return _T("");
+	}
+
+	return diskName;
+}
+
+bool CDvrToolUI::OpenDisk(const CString& diskName)
+{
+	//TCHAR szCmd[MAX_PATH] = _T("\"C:\\Windows\\Explorer.exe\" \"C:\\Windows\"");
+	CString szCmd(_T("\"C:\\Windows\\Explorer.exe\" "));
+	szCmd += _T("\"")+ diskName +_T("\"");
+	STARTUPINFO si = {sizeof(si)};
+	PROCESS_INFORMATION pi = {0};
+
+	if (CreateProcess(NULL, szCmd.GetBuffer(), NULL, NULL, FALSE, 0, NULL, NULL, &si, &pi))
+	{
+		//MessageBox(NULL, _T("打开成功"), NULL, MB_OK);
+		CloseHandle(pi.hProcess);
+		CloseHandle(pi.hThread);
+	}
+	return true;
 }

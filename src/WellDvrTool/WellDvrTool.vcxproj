@@ -77,6 +77,7 @@
       <IntrinsicFunctions>true</IntrinsicFunctions>
       <PreprocessorDefinitions>WIN32;NDEBUG;_WINDOWS;%(PreprocessorDefinitions)</PreprocessorDefinitions>
       <SDLCheck>true</SDLCheck>
+      <RuntimeLibrary>MultiThreaded</RuntimeLibrary>
     </ClCompile>
     <Link>
       <SubSystem>Windows</SubSystem>
@@ -116,8 +117,9 @@
     <ResourceCompile Include="WellDvrTool.rc" />
   </ItemGroup>
   <ItemGroup>
-    <Image Include="small.ico" />
-    <Image Include="WellDvrTool.ico" />
+    <Image Include="..\..\bin\skin\logo.ico" />
+    <Image Include="icon1.ico" />
+    <Image Include="logo.ico" />
   </ItemGroup>
   <Import Project="$(VCTargetsPath)\Microsoft.Cpp.targets" />
   <ImportGroup Label="ExtensionTargets">

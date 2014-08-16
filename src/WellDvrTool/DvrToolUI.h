@@ -60,9 +60,11 @@ protected:
 
 	void RegisgerDvr();
 	CString GetVID_PIDString(const CString &str,  wchar_t  chSplit );
-	void AddUsbDevice( const CString& strName );
+	void AddUsbDevice( const CString& strName, LPARAM lParam);
 	void RemoveUsbDevice( const CString& strName );
 
+	CString GetDiskName(LPARAM lParam);
+	bool OpenDisk(const CString& diskName);
 private:
 	CDevBase* m_pDvr;
 
