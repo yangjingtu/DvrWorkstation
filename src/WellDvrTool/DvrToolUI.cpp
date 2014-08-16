@@ -604,12 +604,13 @@ void CDvrToolUI::AddUsbDevice( const CString& strName, LPARAM lparam)
 	}
 	else if( strVPID == MASS_VID_PID )
 	{
+		Sleep(500);
 		CString diskName = GetDiskName(lparam);
+		m_lblMsg->SetText(_T("枚举成U盘成功！"));		
 		if(!diskName.IsEmpty())
 		{
 			OpenDisk(diskName);
 		}
-		m_lblMsg->SetText(_T("枚举成U盘成功！"));
 	}
 }
 
@@ -696,7 +697,14 @@ CString CDvrToolUI::GetDiskName(LPARAM lParam)
 	char Disk;
 	if(j > i)
 	{
-		Disk = vecDisk[j - 1];
+		while (--j >= 0 && --i >=0)
+		{
+			if(vecDisk[j] != vecOldDisk[i])
+			{
+				Disk = vecDisk[j];
+				break;
+			}
+		}
 	}
 	else
 	{
