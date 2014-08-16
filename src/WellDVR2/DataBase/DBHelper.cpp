@@ -91,7 +91,15 @@ void CDBHelper::UnInit()
 BOOL CDBHelper::IsConnect()
 {	
 	if(!m_bConnectDB)
-		Init(m_strConn);
+	{
+		static int nCount = 100;
+		if(nCount-- == 0)
+		{
+			//定期重连,解决数据库连不上卡的问题
+			Init(m_strConn);
+			nCount = 100;
+		}
+	}
 
 	return m_bConnectDB;	
 }

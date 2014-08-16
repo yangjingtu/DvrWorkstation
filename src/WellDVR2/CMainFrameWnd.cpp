@@ -373,6 +373,10 @@ LRESULT  CMainFrameWnd::OnSysCommand(UINT uMsg, WPARAM wParam, LPARAM lParam, BO
 			SendMessage(WM_SYSCOMMAND, SC_MAXIMIZE, 0);
 			return 0;
 		}
+		else
+		{
+			Close();
+		}
 	}
 	BOOL bZoomed = ::IsZoomed(*this);
 	LRESULT lRes = CWindowWnd::HandleMessage(uMsg, wParam, lParam);
@@ -641,6 +645,9 @@ void CMainFrameWnd::ShowFtpInfo(const wstring& file, const wstring& info, int pr
 //心跳--向后台发送设备状态
 void CMainFrameWnd::CheckDeviceDataTimer()
 {	
+	if(!DB.IsValid())
+		return;
+
 	//发送心跳到后台
 	//1. 调用存储过程
 	static TERMINAL_STATE status;

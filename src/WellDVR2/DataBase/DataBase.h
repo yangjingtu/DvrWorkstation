@@ -42,6 +42,12 @@ public:
 
 	BOOL QueryIpPortByDevId(const wstring& devId,  wstring& ftpip, wstring& ftpport, wstring& iisIp, wstring& iisPort);
 
+	BOOL IsValid() { 
+		if(!m_bInit) 
+			return false;
+		return m_db.IsConnect();
+	}
+
 private:
 	BOOL Init();
 	void UnInit();
@@ -53,6 +59,7 @@ private:
 
 
 private:
+	bool m_bInit;
 	CDBHelper m_db;
 
 	MapDvrIdName mapDvr;

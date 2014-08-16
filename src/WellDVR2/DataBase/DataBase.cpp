@@ -7,6 +7,7 @@
 
 
 CDataBase::CDataBase(void)
+	: m_bInit(false)
 {
 	if(!Init())
 	{
@@ -26,7 +27,8 @@ BOOL CDataBase::Init()
 	//add by yjt 2014-06-13 添加数据库可用性的配置
 	if(!dbi.bEnable)
 	{
-		return FALSE;
+		m_bInit = false;
+		return TRUE;
 	}
 
 	CString strConnect;
@@ -37,12 +39,15 @@ BOOL CDataBase::Init()
 	BOOL bRlt = m_db.Init(strConnect.GetBuffer());
 	strConnect.ReleaseBuffer();
 
+	m_bInit = true;
+
 	return bRlt;
 }
 
 void CDataBase::UnInit()
 {
 	m_db.UnInit();
+	m_bInit = false;
 }
 
 CDataBase& CDataBase::Instance()
@@ -130,7 +135,7 @@ void CDataBase::FillUserVector(_RecordsetPtr record)
 //根据ID实时查询姓名
 CString CDataBase::QueryNameFormID(const CString& id)
 {
-	if( !m_db.IsConnect() )
+	if( !IsValid())
 		return _T("");
 
 	CString strSql;
@@ -197,7 +202,7 @@ CString CDataBase::QueryNameFormID(const CString& id)
 //////////////////////////////////////////////////////////////////////////
 BOOL CDataBase::InsertMediaInfo(const DVRMEDIA_INFO& info)
 {
-	if(!m_db.IsConnect())
+	if(!IsValid())
 	{
 		return FALSE;
 	}
@@ -333,7 +338,7 @@ BOOL CDataBase::InsertMediaInfo(const DVRMEDIA_INFO& info)
 //////////////////////////////////////////////////////////////////////////
 BOOL CDataBase::InsertDvrLog(const DVR_DEVICE_LOG& ddLog)
 {
-	if(!m_db.IsConnect())
+	if(!IsValid())
 	{
 		return FALSE;
 	}
@@ -403,7 +408,7 @@ BOOL CDataBase::InsertDvrLog(const DVR_DEVICE_LOG& ddLog)
 //////////////////////////////////////////////////////////////////////////
 BOOL CDataBase::InsertLog(const TERMINAL_DEV_LOG& tdLog)
 {
-	if(!m_db.IsConnect())
+	if(!IsValid())
 	{
 		return FALSE;
 	}
@@ -496,7 +501,7 @@ BOOL CDataBase::InsertLog(const TERMINAL_DEV_LOG& tdLog)
 //////////////////////////////////////////////////////////////////////////
 BOOL CDataBase::InsertStatus(const TERMINAL_STATE& ts)
 {
-	if(!m_db.IsConnect())
+	if(!IsValid())
 	{
 		return FALSE;
 	}
@@ -541,7 +546,7 @@ BOOL CDataBase::InsertStatus(const TERMINAL_STATE& ts)
 //select t.ftpip, t.ftpport, t.iisip, t.iisport from TERMINALIPCONF t where t.terminalsn = ?
 BOOL CDataBase::QueryIpPortByDevId(const wstring& devId, wstring& ftpip, wstring& ftpport, wstring& iisIp, wstring& iisPort)
 {
-	if( !m_db.IsConnect() )
+	if( !IsValid() )
 		return FALSE;
 
 	CString strSql;
