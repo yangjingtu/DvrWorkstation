@@ -446,7 +446,7 @@ void CWelDVRConfigDlg::OnBnClickedOk()
 	m_IniFile.WriteString(strSec, strKey, strDst);
 
 	strKey = _T("enable");
-	strDst.Format(_T("%d"), m_ckDB.GetCheck() ? _T("1") : _T("0"));
+	strDst.Format(_T("%s"), m_ckDB.GetCheck() ? _T("1") : _T("0"));
 	m_IniFile.WriteString(strSec, strKey, strDst);
 
 	//////////////////////////////////////////////////////////////////////////
