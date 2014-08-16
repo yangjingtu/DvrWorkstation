@@ -65,6 +65,7 @@ protected:
 
 	CString GetDiskName(LPARAM lParam);
 	bool OpenDisk(const CString& diskName);
+	BOOL IsFlashMemory(char chDisk);
 private:
 	CDevBase* m_pDvr;
 

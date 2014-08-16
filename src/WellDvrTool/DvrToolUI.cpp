@@ -307,7 +307,6 @@ LRESULT CDvrToolUI::OnMyDeviceChange(WPARAM wParam, LPARAM lParam)
 			{
 				RemoveUsbDevice(pDevInf->dbcc_name);
 				pHdr->dbch_devicetype == DBT_DEVTYP_VOLUME;
-				
 			}
 			break;
 		case DBT_DEVTYP_HANDLE:
@@ -534,14 +533,17 @@ static const GUID GUID_DEVINTERFACE_LIST[] =
 	// GUID_DEVINTERFACE_USB_DEVICE
 	{ 0xA5DCBF10, 0x6530, 0x11D2, { 0x90, 0x1F, 0x00, 0xC0, 0x4F, 0xB9, 0x51, 0xED } },
 
+	//GUID_DEVINTERFACE_VOLUME
+	{0x53f5630d, 0xb6bf, 0x11d0, { 0x94, 0xf2, 0x00, 0xa0, 0xc9, 0x1e, 0xfb, 0x8b }},
+
 	// GUID_DEVINTERFACE_DISK
-	//{ 0x53f56307, 0xb6bf, 0x11d0, { 0x94, 0xf2, 0x00, 0xa0, 0xc9, 0x1e, 0xfb, 0x8b } },
+	{ 0x53f56307, 0xb6bf, 0x11d0, { 0x94, 0xf2, 0x00, 0xa0, 0xc9, 0x1e, 0xfb, 0x8b } },
 
 	// GUID_DEVINTERFACE_HID, 
-	//{ 0x4D1E55B2, 0xF16F, 0x11CF, { 0x88, 0xCB, 0x00, 0x11, 0x11, 0x00, 0x00, 0x30 } },
+	{ 0x4D1E55B2, 0xF16F, 0x11CF, { 0x88, 0xCB, 0x00, 0x11, 0x11, 0x00, 0x00, 0x30 } },
 
 	// GUID_NDIS_LAN_CLASS
-	//{ 0xad498944, 0x762f, 0x11d0, { 0x8d, 0xcb, 0x00, 0xc0, 0x4f, 0xc3, 0x35, 0x8c } }
+	{ 0xad498944, 0x762f, 0x11d0, { 0x8d, 0xcb, 0x00, 0xc0, 0x4f, 0xc3, 0x35, 0x8c } }
 
 	// GUID_DEVINTERFACE_COMPORT
 	//{ 0x86e0d1e0, 0x8089, 0x11d0, { 0x9c, 0xe4, 0x08, 0x00, 0x3e, 0x30, 0x1f, 0x73 } },
@@ -598,6 +600,7 @@ void CDvrToolUI::AddUsbDevice( const CString& strName, LPARAM lparam)
 			m_lblMsg->SetText(_T("无法识别DVR设备，请重新插拔！"));
 			return;
 		}
+		GetDiskName(lparam);
 	}
 	else if( strVPID == MASS_VID_PID )
 	{
@@ -647,31 +650,63 @@ CString CDvrToolUI::GetVID_PIDString(const CString &str,  wchar_t  chSplit )
 	return s2;
 }
 
+// 驱动器类型检查函数--判断是否是移动存储
+BOOL CDvrToolUI::IsFlashMemory(char chDisk)
+{
+	CString strDisk(_T("Z:\\"));
+	strDisk.SetAt(0, chDisk);
+
+	UINT unType =  GetDriveType(strDisk);
+
+	if (DRIVE_REMOVABLE == unType)
+	{
+		return 1;  // 是移动存储
+	}  
+	else
+	{
+		return 0;  // 不是移动存储
+	}
+}
+
+//获取新插入盘的盘符
 CString CDvrToolUI::GetDiskName(LPARAM lParam)
 {
-	PDEV_BROADCAST_VOLUME pDevVolume = (DEV_BROADCAST_VOLUME*)lParam;
-	DWORD mask = pDevVolume->dbcv_unitmask;
+	TCHAR buf[100]; 
+	//"C:\<NULL>D:\<NULL>E:\<NULL><NULL>" 
+	DWORD len = GetLogicalDriveStrings(sizeof(buf)/sizeof(TCHAR),buf); 
 
-	TCHAR diskName[MAX_PATH] = {0};
-	int i = 0;
-	for ( i = 0; i < 26; i++)
-	{
-		if((mask >> i) == 1)
+	static vector<TCHAR> vecOldDisk;
+	vector<TCHAR> vecDisk;
+
+	TCHAR* s=buf;
+	for ( ; *s; s += _tcslen(s)+1 ) 
+	{ 
+		LPCTSTR sDrivePath = s; //单个盘符 
+		if(IsFlashMemory(sDrivePath[0]))
 		{
-			//获取盘符
-			diskName[0] = 'A' + i;
-			diskName[1] = '\0';
-			_tcscat_s(diskName, TEXT(":\\"));
-			break;
+			vecDisk.push_back(sDrivePath[0]);
 		}
-	}
+	} 
 
-	if(i == 26)
-	{
+	int i = vecOldDisk.size();
+	int j = vecDisk.size();
+	if(i == j)
 		return _T("");
+
+	char Disk;
+	if(j > i)
+	{
+		Disk = vecDisk[j - 1];
+	}
+	else
+	{
+		Disk = 'C';
 	}
 
-	return diskName;
+	vecOldDisk.swap(vecDisk);
+	CString strDisk;
+	strDisk.Format(_T("%C:\\"), Disk);
+	return strDisk;
 }
 
 bool CDvrToolUI::OpenDisk(const CString& diskName)
