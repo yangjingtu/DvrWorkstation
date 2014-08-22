@@ -870,6 +870,7 @@ bool CMainFrameWnd::Alert(const CString& strMsg, const CString& title, const CSt
 	if(pMsgWnd)
 		delete pMsgWnd;
 	pMsgWnd = NULL;
+
 	return bOk;
 }
 

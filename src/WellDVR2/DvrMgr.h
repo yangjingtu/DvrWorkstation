@@ -105,5 +105,9 @@ protected:
 	//	3. 一分种后清除
 	//////////////////////////////////////////////////////////////////////////
 	MapDvrWnd m_mapDvrWnd;
+
+	//沒有定位接口--Alert狀態存儲
+	//已接示的就不要重復提示
+	map<wstring, int> m_mapAlertPort;
 };
 

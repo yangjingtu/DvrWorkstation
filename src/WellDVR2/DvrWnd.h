@@ -72,6 +72,12 @@ public:
 	void MassDev();
 	BOOL IsCopying() { return m_bIsCopying; }
 
+protected:
+
+	bool IsLogFile(const CString& strFileName);
+	//拷贝日志文件（追加拷贝)
+	bool CopyLogFile(const TCHAR* strFileSrc, const TCHAR* strDst);
+
 private:
 	void Init(bool empty);
 	void UnInit();

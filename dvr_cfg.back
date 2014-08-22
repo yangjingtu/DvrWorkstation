@@ -50,5 +50,3 @@ DeviceId=000000000000000001
 [WEB]
 ip=192.168.1.90
 port=9090
-[PORT]
-PortNum=0

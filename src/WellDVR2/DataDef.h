@@ -38,7 +38,7 @@ using namespace std;
 //V1.01.00 是新界面版本，新界面由中间版本号区分
 //V1.01.04 磁盘空间不足的声音报警
 //V1.01.05 添加了A4,X6,D6的支持
-#define SOFT_VERSION	_T("V1.01.05")
+#define SOFT_VERSION	_T("版本:V1.02.01")
 
 #define COMPANY _T("深圳市威尔电器有限公司")
 

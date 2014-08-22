@@ -148,7 +148,20 @@ CDvrWnd* CDvrMgr::PutDvr(const wstring& strPort)
 	int index = GetWndIndex(strPort);
 	if(index == -1)
 	{
+		map<wstring, int>::iterator itF = m_mapAlertPort.find(strPort);
+		if(itF != m_mapAlertPort.end())
+		{
+			if(itF->second == 1)
+			{
+				return NULL;
+			}
+		}
+
+		m_mapAlertPort[strPort] = 1;
 		SHAREDATA.g_pMainFrame->Alert(_T("此接口没有定位"));
+		SHAREDATA.g_pMainFrame->ShowMsgInfo(_T("此接口没有定位"));
+		m_mapAlertPort[strPort] = 0;
+
 		return NULL;
 	}
 

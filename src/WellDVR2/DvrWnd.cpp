@@ -7,6 +7,7 @@
 
 #include "dvr/interface.h"
 #include "ConvertVideo/Avi2Flv.h"
+#include "WellCommon/DirHelper.h"
 
 MapDvrTimer CDvrWnd::m_mapTimer;
 CDvrWnd::CDvrWnd(void)
@@ -126,7 +127,7 @@ void CDvrWnd::UnInitSpeed()
 	}
 }
 
-
+//modified by yjt 2014-8-22 修改了新版多了一箇DCIM文件
 void CDvrWnd::CopyDir(const CString& strDrive)
 {
 	if( strDrive.IsEmpty() )
@@ -146,7 +147,15 @@ void CDvrWnd::CopyDir(const CString& strDrive)
 		m_proRange = m_filecnt;
 		m_proValue = 1;
 
-		m_strSrcPath = strDrive;
+		if(CDirHelper::DirExits(strDrive + _T("\\DCIM")))
+		{
+			m_strSrcPath = strDrive + _T("\\DCIM");
+		}
+		else
+		{
+			m_strSrcPath = strDrive;
+		}
+
 	
 		if( SHAREDATA.g_strFileTarget == _T("localhost") )
 			m_strDstPath.Format(_T("%s\\%s"), SHAREDATA.g_strFilePath, m_strId);	
@@ -308,12 +317,24 @@ void CDvrWnd::CopyDir(const TCHAR* src, const TCHAR* dst, LPBOOL bCancel)
 			
 			ResetTransSize();
 
-			//调用核心API函数CopyFileEx来复制文件
-			BOOL bSucceed = CopyFileEx(newsrc,newdst,
-				CopyProgressRoutine,
-				this,
-				bCancel,				//会检测是否取消拷贝s
-				COPY_FILE_ALLOW_DECRYPTED_DESTINATION);
+			BOOL bSucceed = FALSE;
+
+			//modified by yjt 2014-08-22 对日志文件特殊处理，追加写入
+			if(!IsLogFile(newsrc))
+			{
+				//调用核心API函数CopyFileEx来复制文件
+				bSucceed = CopyFileEx(newsrc,newdst,
+					CopyProgressRoutine,
+					this,
+					bCancel,				//会检测是否取消拷贝s
+					COPY_FILE_ALLOW_DECRYPTED_DESTINATION);
+			}
+			else
+			{
+				bSucceed = CopyLogFile(newsrc, newdst);
+			}
+
+
 			if(!bSucceed)
 			{
 				DWORD dw = GetLastError();
@@ -569,4 +590,50 @@ CDvrWnd& CDvrWnd::operator=(const CDvrWnd& dvr)
 	*this = dvr;
 
 	return *this;
+}
+
+bool CDvrWnd::IsLogFile(const CString& strFileName)
+{
+	CString str = strFileName.Right(3);
+	str.MakeUpper();
+	return str == _T("TXT");
+}
+
+//拷贝日志文件（追加拷贝)
+bool CDvrWnd::CopyLogFile(const TCHAR* strFileSrc, const TCHAR* strDst)
+{
+	CFile fileSrc;
+	CFile fileDst;
+	try
+	{
+		if(!fileSrc.Open(strFileSrc, CFile::modeRead))
+		{
+			return false;
+		}
+
+		if(!fileDst.Open(strDst, CFile::modeWrite))
+		{
+			fileSrc.Close();
+			return false;
+		}
+
+		fileDst.SeekToEnd();
+
+		char buff[1024] = {0};
+		DWORD dwRead = 0;
+		do
+		{
+			dwRead = fileSrc.Read(buff, 1024);
+			fileDst.Write(buff, dwRead);
+		}while(dwRead > 0);
+
+		fileSrc.Close();
+		fileDst.Close();
+	}
+	catch(...)
+	{
+		return false;
+	}
+
+	return true;
 }
