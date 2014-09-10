@@ -6,6 +6,7 @@
 #include "WellDVRConfig.h"
 #include "WellDVRConfigDlg.h"
 #include "afxdialogex.h"
+#include "FileBackUp.h"
 
 #ifdef _DEBUG
 #define new DEBUG_NEW
@@ -98,6 +99,7 @@ void CWelDVRConfigDlg::DoDataExchange(CDataExchange* pDX)
 	DDX_Control(pDX, IDC_EDIT21, m_edtDeviceId);
 	DDX_Control(pDX, IDC_EDIT22, m_edtWebIp);
 	DDX_Control(pDX, IDC_EDIT23, m_edtWebPort);
+	DDX_Control(pDX, IDC_CBX_DVR_TYPE, m_cbxDvrType);
 }
 
 BEGIN_MESSAGE_MAP(CWelDVRConfigDlg, CDialogEx)
@@ -114,6 +116,7 @@ BEGIN_MESSAGE_MAP(CWelDVRConfigDlg, CDialogEx)
 	ON_BN_CLICKED(IDC_BUTTON3, &CWelDVRConfigDlg::OnBnClickedButton3)
 	ON_LBN_SELCHANGE(IDC_LIST1, &CWelDVRConfigDlg::OnLbnSelchangeList1)
 	ON_BN_CLICKED(IDC_BUTTON4, &CWelDVRConfigDlg::OnBnClickedButton4)
+	ON_WM_CLOSE()
 END_MESSAGE_MAP()
 
 
@@ -155,6 +158,14 @@ BOOL CWelDVRConfigDlg::OnInitDialog()
 	m_mapLevel[3] = _T("FTP2");
 	m_btnUp.EnableWindow(FALSE);
 	m_btnDown.EnableWindow(FALSE);
+
+	m_cbxDvrType.InsertString(0, _T("威尔电器3/4代DVR"));
+	m_cbxDvrType.InsertString(1, _T("华安DVR"));
+	m_cbxDvrType.InsertString(2, _T("上海凌锐A3/A4"));
+	m_cbxDvrType.InsertString(3, _T("上海凌锐D6"));
+	m_cbxDvrType.InsertString(4, _T("上海凌锐X6"));
+
+	m_cbxDvrType.SetCurSel(0);
 
 	Init();
 
@@ -349,6 +360,13 @@ void CWelDVRConfigDlg::Init()
 		m_ckEnableFtp.EnableWindow(FALSE);
 		EnableFtp(FALSE);
 	}
+
+	//DVR	类型
+	strSec = _T("DVR");
+	strKey = _T("type");
+	int nType = m_IniFile.ReadInt(strSec, strKey, 0);
+	m_cbxDvrType.SetCurSel(nType);
+
 }
 
 void CWelDVRConfigDlg::OnBnClickedButton1()
@@ -409,6 +427,16 @@ void CWelDVRConfigDlg::OnBnClickedOk()
 	strSec = _T("DeviceInfo");
 	strKey = _T("DeviceId");
 	m_IniFile.WriteString(strSec, strKey, strDst);
+
+	//DVR	类型
+	strSec = _T("DVR");
+	strKey = _T("type");
+	int nType = m_cbxDvrType.GetCurSel();
+	if(nType < 0 && nType > m_cbxDvrType.GetCount())
+		nType = 0;
+	strDst.Format(_T("%d"), nType);
+	m_IniFile.WriteString(strSec, strKey, strDst);
+
 
 	m_edtWebIp.GetWindowText(strDst);
 	strSec = _T("WEB");
@@ -506,6 +534,7 @@ void CWelDVRConfigDlg::OnBnClickedOk()
 	MessageBox(_T("设置成功"), _T("消息提示"));
 
 	//备份文件
+	ConfigBackUp::BackUp();
 
 	CDialogEx::OnOK();
 }
@@ -729,4 +758,13 @@ void CWelDVRConfigDlg::RefreshList()
 void CWelDVRConfigDlg::OnBnClickedButton4()
 {
 	CDialog::OnCancel();
+}
+
+
+void CWelDVRConfigDlg::OnClose()
+{
+	// TODO: Add your message handler code here and/or call default
+	ConfigBackUp::BackUp();
+
+	CDialogEx::OnClose();
 }

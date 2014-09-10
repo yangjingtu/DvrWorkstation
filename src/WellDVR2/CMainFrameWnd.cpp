@@ -98,7 +98,7 @@ void  CMainFrameWnd::Init()
 
 	if(m_pCaptionTxt)
 	{
-		m_pCaptionTxt->SetText(_T("{f 3}") + gc_AppName + _T("{/f}"));
+		m_pCaptionTxt->SetText(gc_AppName);
 	}
 
 	m_pFtpPro = static_cast<CProgressUI*>(m_pm.FindControl(_T("proFtp")));
@@ -173,6 +173,7 @@ void  CMainFrameWnd::Notify(TNotifyUI& msg)
 		CStdString name = msg.pSender->GetName();
 		if( name == _T("quitbtn") ) 
 		{
+			CONF.BackUp();
 			LOGS(_T("退出系统"));
 			PostQuitMessage(0);
 			return;
@@ -183,6 +184,7 @@ void  CMainFrameWnd::Notify(TNotifyUI& msg)
 	}
 	else if( msg.sType == _T("Quit"))
 	{
+		CONF.BackUp();
 		LOGS(_T("退出系统"));
 		PostQuitMessage(0);
 		return;
@@ -254,6 +256,7 @@ LRESULT  CMainFrameWnd::OnDestroy(UINT uMsg, WPARAM wParam, LPARAM lParam, BOOL&
 	KillTimer(m_hWnd, CHECKUSB_TIMERID);
 	LOGS(_T("关闭定时器"));
 
+	CONF.BackUp();
 	::PostQuitMessage(0L);
 
 	bHandled = FALSE;
@@ -375,6 +378,7 @@ LRESULT  CMainFrameWnd::OnSysCommand(UINT uMsg, WPARAM wParam, LPARAM lParam, BO
 		}
 		else
 		{
+			CONF.BackUp();
 			Close();
 		}
 	}
@@ -447,6 +451,7 @@ LRESULT CMainFrameWnd::OnSysKeyHandle(WPARAM wParam, LPARAM lParam)
 	else if(nChar == 'Q')
 	{
 		LOGS(_T("快捷键 退出系统"));
+		CONF.BackUp();
 		Close();
 	}
 	else if(nChar == 'M')
@@ -583,12 +588,12 @@ BOOL CMainFrameWnd::InitSystem()
 	LOGS(_T("运行FTP服务"));
 
 	//运行转码服务
-	wstring strFlvPath = SHAREDATA.g_strFilePath.GetString();
-	strFlvPath += _T("\\WebVideo\\");
-	AVI2FLV.Run(strFlvPath);
+//	wstring strFlvPath = SHAREDATA.g_strFilePath.GetString();
+//	strFlvPath += _T("\\WebVideo\\");
+//	AVI2FLV.Run(strFlvPath);
 
-	LOGS(_T("运行转码服务"));
-	LOGS(_T("系统正常运行"));
+//	LOGS(_T("运行转码服务"));
+//	LOGS(_T("系统正常运行"));
 
 	return TRUE;
 }

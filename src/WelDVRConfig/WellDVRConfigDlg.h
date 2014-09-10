@@ -135,4 +135,6 @@ public:
 	afx_msg void OnBnClickedButton4();
 	CEdit m_edtWebIp;
 	CEdit m_edtWebPort;
+	afx_msg void OnClose();
+	CComboBox m_cbxDvrType;
 };

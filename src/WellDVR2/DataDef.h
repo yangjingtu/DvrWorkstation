@@ -38,7 +38,7 @@ using namespace std;
 //V1.01.00 是新界面版本，新界面由中间版本号区分
 //V1.01.04 磁盘空间不足的声音报警
 //V1.01.05 添加了A4,X6,D6的支持
-#define SOFT_VERSION	_T("版本:V1.02.01")
+#define SOFT_VERSION	_T("版本:V1.02.02")
 
 #define COMPANY _T("深圳市威尔电器有限公司")
 
@@ -131,6 +131,15 @@ enum EM_DEV_COLOR{
 enum EM_WORK_LEVEL{
 	LOCATION = 1,				//定位模式
 	WORKING						//工作模式
+};
+
+enum EM_DVR_TYPE
+{
+	DVR_TYPE_WELL_34 = 0,					//WELL 3代 4代DVR
+	DVR_TYPE_HA,									//华安（WELL 2代)
+	DVR_TYPE_SHLR_A34,						//上海凌锐 A3/A4
+	DVR_TYPE_SHLR_D6,						//上海凌锐 D6
+	DVR_TYPE_SHLR_X6							//上海凌锐 X6
 };
 
 /////////////////////////////////////////////////////////////////////////////////////

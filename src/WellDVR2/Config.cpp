@@ -139,6 +139,7 @@ bool Config::InitFromConfig()
 	SHAREDATA.g_strWebIp = wi.strIp;
 	SHAREDATA.g_nWebPort = wi.nPort;
 
+	SHAREDATA.g_nDvrType = GetDvrType();
 	return true;
 }
 
@@ -175,6 +176,15 @@ DBInfo Config::GetDBInfo()
 	dbi.bEnable = m_Ini.ReadInt(strSec, strKey, 0);
 
 	return dbi;
+}
+
+int Config::GetDvrType()
+{
+	//DVR	¿‡–Õ
+	CString strSec = _T("DVR");
+	CString strKey = _T("type");
+	int nType = m_Ini.ReadInt(strSec, strKey, 0);
+	return nType;
 }
 
 FTPInfo Config::GetFTPInfo(const CString& strSec)

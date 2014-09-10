@@ -2,17 +2,16 @@
 #include "DvrMgr.h"
 #include "dvr/interface.h"
 #include <comutil.h>
-#include "ShareData.h"
 #include "DataBase/DataBase.h"
 #include "IniFile.h"
 #include "Config.h"
-#include "dvr/HADvr.h"
-#include "dvr/WellDvr34.h"
+#include "dvr/DvrFactory.h"
 #include "USBCtrl/UsbHelper.h"
 #include <sstream>
 using namespace std;
 #include "LocationConfig.h"
 #include "dvr/interface.h"
+#include "ShareData.h"
 
 //////////////////////////////////////////////////////////////////////////
 //////////////////////////////////////////////////////////////////////////
@@ -224,20 +223,11 @@ bool CDvrMgr::GetDvrId(CString& strId, CDevBase** pDvr)
 {
 	strId.Empty();
 	
-	//调用二代
-	CDevBase* pDev = new CA4Dvr();
+	CDevBase* pDev = CREATE_DVR;
 	if(pDev == NULL)
 		return false;
 
 	BOOL bret = pDev->GetIDEx(strId);
-	if(!bret || strId.IsEmpty())
-	{
-		//3,4代DVR
-		delete pDev;
-		pDev = new CWellDvr34();//CHADvr();
-		if(pDev)
-			bret = pDev->GetIDEx(strId);
-	}
 	if( !bret || strId.IsEmpty())
 	{
 		delete pDev;

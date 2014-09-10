@@ -34,6 +34,7 @@ public:
 	WebInfo GetWebInfo();
 	DBInfo GetDBInfo();
 	FTPInfo GetFTPInfo(const CString& strSec);
+	int GetDvrType();
 
 	void GetFtpSetting(CString& strImp, int& nHDDef);
 	vector<wstring> GetFtpLevel();

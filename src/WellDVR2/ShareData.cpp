@@ -30,6 +30,8 @@ void CShareData::Init()
 	g_dbgLevel = WORKING;
 
 	g_strDeviceId.Empty();
+	
+	g_nDvrType = DVR_TYPE_WELL_34;
 }
 
 void CShareData::UnInit()

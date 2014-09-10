@@ -109,6 +109,8 @@
     <None Include="res\WelDVRConfig.ico" />
   </ItemGroup>
   <ItemGroup>
+    <ClInclude Include="CharSetHelper.h" />
+    <ClInclude Include="FileBackUp.h" />
     <ClInclude Include="FtpObj.h" />
     <ClInclude Include="IniFile.h" />
     <ClInclude Include="Resource.h" />
@@ -118,6 +120,8 @@
     <ClInclude Include="WellDVRConfigDlg.h" />
   </ItemGroup>
   <ItemGroup>
+    <ClCompile Include="CharSetHelper.cpp" />
+    <ClCompile Include="FileBackUp.cpp" />
     <ClCompile Include="FtpObj.cpp" />
     <ClCompile Include="IniFile.cpp" />
     <ClCompile Include="stdafx.cpp">

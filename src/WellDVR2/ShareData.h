@@ -41,5 +41,7 @@ public:
 
 	CString g_strWebIp;					//WebIP
 	int g_nWebPort;						//WebPort
+
+	int g_nDvrType;
 };
 

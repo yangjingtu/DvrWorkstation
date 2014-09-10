@@ -306,6 +306,7 @@
     <ClCompile Include="ConvertVideo\ConvertVideo.cpp" />
     <ClCompile Include="DataBase\DataBase.cpp" />
     <ClCompile Include="DataBase\DBHelper.cpp" />
+    <ClCompile Include="dvr\DvrFactory.cpp" />
     <ClCompile Include="DvrWnd.cpp" />
     <ClCompile Include="DvrLocation.cpp" />
     <ClCompile Include="DvrMgr.cpp" />
@@ -388,6 +389,7 @@
     <ClInclude Include="DataBase\DataBase.h" />
     <ClInclude Include="DataDef.h" />
     <ClInclude Include="DataBase\DBHelper.h" />
+    <ClInclude Include="dvr\DvrFactory.h" />
     <ClInclude Include="DvrWnd.h" />
     <ClInclude Include="DvrLocation.h" />
     <ClInclude Include="DvrMgr.h" />

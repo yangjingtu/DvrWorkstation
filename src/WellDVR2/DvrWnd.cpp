@@ -611,7 +611,7 @@ bool CDvrWnd::CopyLogFile(const TCHAR* strFileSrc, const TCHAR* strDst)
 			return false;
 		}
 
-		if(!fileDst.Open(strDst, CFile::modeWrite))
+		if(!fileDst.Open(strDst, CFile::modeWrite | CFile::modeCreate | CFile::modeNoTruncate))
 		{
 			fileSrc.Close();
 			return false;
