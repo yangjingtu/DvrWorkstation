@@ -17,14 +17,14 @@ using namespace std;
 
 #define ROWS	1
 #define COLS	1
-#define DVR_TOTAL_NUM	1
+#define DVR_TOTAL_NUM	ROWS*COLS
 
 #define DVR_INSTANCE _T("WellDvrOne")
 #else
 
 #define ROWS	4
 #define COLS	4
-#define DVR_TOTAL_NUM	16
+#define DVR_TOTAL_NUM	ROWS*COLS
 
 #define DVR_INSTANCE _T("WellDvr")
 #endif

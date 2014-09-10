@@ -103,7 +103,7 @@ void DvrListUI::SetDvrPos(RECT rc)
 	int height = rc.bottom - rc.top;
 
 	width = width / SHAREDATA.g_dvrProp.numCol;
-	height = height / SHAREDATA.g_dvrProp.numCol;
+	height = height / SHAREDATA.g_dvrProp.numRow;
 	//值的宽度 = 单个dvr的宽度　－　标签30 - 间隔10 - 图片的宽
 	int widVal = width - height * DVR_IMG_SCALE - 20;
 	for( int it1 = 0; it1 < m_items.GetSize(); it1++ ) 
@@ -275,7 +275,7 @@ CContainerUI* DvrListUI::GetItem(int row, int col)
 		return NULL;
 	}
 
-	int nIndex = (row  * SHAREDATA.g_dvrProp.numCol) +  col;
+	int nIndex = nIndex = (row  * SHAREDATA.g_dvrProp.numCol) +  col;
 	CContainerUI* pControl = static_cast<CContainerUI*>(m_items[nIndex]);
 	if( NULL == pControl && !pControl->IsVisible())
 	{
@@ -295,7 +295,7 @@ void DvrListUI::ClearAllInfo()
 	for( int it1 = 0; it1 < m_items.GetSize(); it1++ ) 
 	{
 		int row = it1 / SHAREDATA.g_dvrProp.numCol;
-		int col = it1 % SHAREDATA.g_dvrProp.numRow;
+		int col = it1 % SHAREDATA.g_dvrProp.numCol;
 		ClearInfo(row, col);
 	}
 }
