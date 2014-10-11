@@ -14,7 +14,7 @@
     <ProjectGuid>{91FB6A99-5622-4370-80F2-7934ECE0ABF9}</ProjectGuid>
     <Keyword>Win32Proj</Keyword>
     <RootNamespace>Register</RootNamespace>
-    <SccProjectName>"$/WellDVR/src/Register", EXKEAAAA</SccProjectName>
+    <SccProjectName>"%24/电子警察/WorkStation", KNEDAAAA</SccProjectName>
     <SccLocalPath>..\..</SccLocalPath>
     <SccProvider>MSSCCI:Microsoft Visual SourceSafe</SccProvider>
   </PropertyGroup>

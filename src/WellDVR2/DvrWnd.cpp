@@ -34,6 +34,7 @@ void CDvrWnd::Init(bool empty)
 	m_bStopCopy = FALSE;
 
 	m_filecnt = 0;
+	m_nReadFileCount = 0;
 
 	m_proRange = 100;
 	m_proValue = 0;
@@ -83,6 +84,7 @@ void CDvrWnd::UnInit()
 	m_bStopCopy = FALSE;
 
 	m_filecnt = 0;
+	m_nReadFileCount = 0;
 
 	if(m_pDev)
 	{
@@ -135,6 +137,11 @@ void CDvrWnd::CopyDir(const CString& strDrive)
 		m_strStatus = _T("目录为空, 可以安全拔掉DVR设备");
 		return ;
 	}
+	//安全停止后不在拷貝
+	if(m_bStopCopy == TRUE)
+	{
+		return;
+	}
 
 	m_filecnt = 0;
 	RecursiveFindFile(strDrive);
@@ -142,10 +149,12 @@ void CDvrWnd::CopyDir(const CString& strDrive)
 	//设备进度条
 	if( m_filecnt > 0 )
 	{
+		SetStatus(DVR_NORMAL);
 		m_bIsCopying = TRUE;
 
 		m_proRange = m_filecnt;
-		m_proValue = 1;
+		m_proValue = 0;
+		m_nReadFileCount = 0;
 
 		if(CDirHelper::DirExits(strDrive + _T("\\DCIM")))
 		{
@@ -168,12 +177,21 @@ void CDvrWnd::CopyDir(const CString& strDrive)
 		m_bIsCopying = FALSE;
 		if(m_proValue == m_proRange)
 		{
+			m_nReadFileCount = 0;
 			m_strStatus = _T("传输完成, 可以安全拔掉DVR设备");
 			LOG(_T("%s[%s]"), m_strStatus, m_strId);
 		}
 		else
 		{
-			m_strStatus = _T("没有文件, 可以安全拔掉DVR设备");	
+			if(m_nReadFileCount++ < 10)
+			{
+				m_strStatus = _T("正在检测[") + strDrive + _T("]， 请稍候...");	
+			}
+			else
+			{
+				m_nReadFileCount = 0;
+				m_strStatus = _T("没有文件, 可以安全拔掉DVR设备");	
+			}
 		}
 		m_status = DVR_COPY_OK;
 	}
@@ -230,11 +248,11 @@ UINT CDvrWnd::CopyDirProc()
 
 		ResetTransSize();
 		m_CopyStatus = COPY_OK;
-		m_bStopCopy = FALSE;
 
 		ResetEvent(m_hCopyEvent);
 
 		m_bIsCopying = FALSE;
+		m_nReadFileCount = 0;
 	}
 
 	return 0;
@@ -297,8 +315,9 @@ void CDvrWnd::CopyDir(const TCHAR* src, const TCHAR* dst, LPBOOL bCancel)
 		}
 		else
 		{
-			if( m_CopyStatus == COPY_STOP )
+			if( m_CopyStatus == COPY_STOP || *bCancel )
 			{
+				m_CopyStatus = COPY_STOP;
 				break;
 			}
 
@@ -348,12 +367,16 @@ void CDvrWnd::CopyDir(const TCHAR* src, const TCHAR* dst, LPBOOL bCancel)
 				}
 
 				if(m_bStopCopy == TRUE)
+				{
  					m_CopyStatus = COPY_STOP;
+				}
  				else
 				{
 					//进度条
 					if(m_proValue < m_proRange)
+					{
 						++m_proValue;
+					}
 					//异常文件跳过
 					continue;
 				}
@@ -375,7 +398,9 @@ void CDvrWnd::CopyDir(const TCHAR* src, const TCHAR* dst, LPBOOL bCancel)
 			{
 				//进度条
 				if(m_proValue < m_proRange)
+				{
 					++m_proValue;
+				}
 			}
 			else
 			{
@@ -466,6 +491,7 @@ void CDvrWnd::ClearInfo()
 	m_strFile.Empty();
 
 	m_bIsCopying = FALSE;
+	m_bStopCopy = FALSE;
 	if(m_pDev)
 	{
 		delete m_pDev;
@@ -473,6 +499,8 @@ void CDvrWnd::ClearInfo()
 	}
 
 	ClearSpeed();
+
+	m_nReadFileCount = 0;
 }
 
 void CDvrWnd::ClearSpeed()

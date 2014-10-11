@@ -14,8 +14,8 @@
     <ProjectGuid>{5E8DFD5B-E4B5-40A1-9455-9971715EB9B1}</ProjectGuid>
     <RootNamespace>WellCommon</RootNamespace>
     <Keyword>MFCDLLProj</Keyword>
-    <SccProjectName>"$/WellDVR/src/WellCommon", KHLEAAAA</SccProjectName>
-    <SccLocalPath>.</SccLocalPath>
+    <SccProjectName>"%24/电子警察/WorkStation", KNEDAAAA</SccProjectName>
+    <SccLocalPath>..\..</SccLocalPath>
     <SccProvider>MSSCCI:Microsoft Visual SourceSafe</SccProvider>
   </PropertyGroup>
   <Import Project="$(VCTargetsPath)\Microsoft.Cpp.Default.props" />

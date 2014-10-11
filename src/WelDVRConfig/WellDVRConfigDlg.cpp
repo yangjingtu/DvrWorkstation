@@ -152,6 +152,9 @@ BOOL CWelDVRConfigDlg::OnInitDialog()
 	SetIcon(m_hIcon, FALSE);		// 设置小图标
 
 	// TODO: 在此添加额外的初始化代码
+	ConfigBackUp::Restore();
+
+
 	m_IniFile.SetIniPathName(GetAppPath() + gc_Config);
 	m_mapLevel[1] = _T("FTP");
 	m_mapLevel[2] = _T("FTP1");

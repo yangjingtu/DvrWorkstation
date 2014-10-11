@@ -21,7 +21,7 @@
   <PropertyGroup Label="Globals">
     <ProjectName>WellDVR2</ProjectName>
     <ProjectGuid>{21B017E7-7805-40D5-9D96-AABF572F57D1}</ProjectGuid>
-    <SccProjectName>"%24/WellDVR", APKEAAAA</SccProjectName>
+    <SccProjectName>"%24/电子警察/WorkStation", KNEDAAAA</SccProjectName>
     <SccLocalPath>..\..</SccLocalPath>
     <SccProvider>MSSCCI:Microsoft Visual SourceSafe</SccProvider>
   </PropertyGroup>
@@ -372,6 +372,7 @@
     <ClCompile Include="USBCtrl\UsbHelper.cpp" />
     <ClCompile Include="WellCommon\AviHelper.cpp" />
     <ClCompile Include="WellCommon\CharSetHelper.cpp" />
+    <ClCompile Include="WellCommon\CriLock.cpp" />
     <ClCompile Include="WellCommon\DirHelper.cpp" />
     <ClCompile Include="WellCommon\StringHelper.cpp" />
     <ClCompile Include="WellCommon\XmlHelper.cpp" />
@@ -427,6 +428,7 @@
     <ClInclude Include="USBCtrl\usbioctl.h" />
     <ClInclude Include="WellCommon\AviHelper.h" />
     <ClInclude Include="WellCommon\CharSetHelper.h" />
+    <ClInclude Include="WellCommon\CriLock.h" />
     <ClInclude Include="WellCommon\DirHelper.h" />
     <ClInclude Include="WellCommon\StringHelper.h" />
     <ClInclude Include="WellCommon\XmlHelper.h" />

@@ -38,6 +38,7 @@ void CDvrMgrBase::Init()
 			m_vecDvrWnd.push_back(pDvrWnd);
 		}
 	}
+	INIT_LOCK;
 }
 
 void CDvrMgrBase::UnInit()
@@ -54,6 +55,7 @@ void CDvrMgrBase::UnInit()
 		}
 	}
 	m_vecDvrWnd.clear();
+	UNINIT_LOCK;
 }
 
 int CDvrMgrBase::GetWndIndexByRowCol(int row, int col)
@@ -139,6 +141,7 @@ CDvrMgr& CDvrMgr::Instance()
 
 CDvrWnd* CDvrMgr::PutDvr(const wstring& strPort)
 {
+	LOCK;
 	if(strPort.empty())
 	{
 		return NULL;
@@ -221,6 +224,7 @@ CDvrWnd* CDvrMgr::PutDvr(const wstring& strPort)
 //modified by yjt 2014-06-12 添加了a4,d6,x6机器的支持
 bool CDvrMgr::GetDvrId(CString& strId, CDevBase** pDvr)
 {
+	LOCK;
 	strId.Empty();
 	
 	CDevBase* pDev = CREATE_DVR;
@@ -241,6 +245,7 @@ bool CDvrMgr::GetDvrId(CString& strId, CDevBase** pDvr)
 
 void CDvrMgr::RemoveDvr(const wstring& strPort)
 {
+	LOCK;
 	if(strPort.empty())
 	{
 		return;
@@ -265,6 +270,7 @@ void CDvrMgr::RemoveDvr(const wstring& strPort)
 
 void CDvrMgr::CopyDvrFile(const wstring& strPort, const wstring& diskName)
 {
+	LOCK;
 	int nWndIndex = GetWndIndex(strPort);
 	if(nWndIndex == -1)
 	{

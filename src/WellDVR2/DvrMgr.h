@@ -14,6 +14,7 @@
 #include <list>
 #include <algorithm>
 #include <afxmt.h>
+#include "WellCommon/CriLock.h"
 
 using namespace std;
 
@@ -60,6 +61,7 @@ protected:
 protected:
 	//<Dvr´°¿Ú¶ÔÏó>
 	VecDvrWnd m_vecDvrWnd;
+	DECLARE_LOCK
 };
 
 

@@ -29,6 +29,7 @@ dbg/
 *.obj
 *.log
 *.opensdf
+*.ipch
 
 #ignore dir
 release/
@@ -38,3 +39,5 @@ tools/
 debug/
 Debug/
 output/
+/ipch/
+ipch

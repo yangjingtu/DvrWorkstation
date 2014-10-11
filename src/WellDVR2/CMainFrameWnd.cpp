@@ -144,7 +144,7 @@ void  CMainFrameWnd::OnPrepare()
 
 	SetTimer(m_hWnd, CHECKFTP_TIMERID, 3000, NULL);
 
-	SetTimer(m_hWnd, CHECKUSB_TIMERID, 1000, NULL);
+	SetTimer(m_hWnd, CHECKUSB_TIMERID, 1500, NULL);
 }
 
 void  CMainFrameWnd::Notify(TNotifyUI& msg)
@@ -165,7 +165,11 @@ void  CMainFrameWnd::Notify(TNotifyUI& msg)
 			}
 			else
 			{
-				SendMessage(WM_SYSCOMMAND, SC_MINIMIZE, 0);
+				if(!m_bTopWnd)
+				{
+					CONF.BackUp();
+					Close();
+				}
 			}
 			return; 
 		}
@@ -364,6 +368,7 @@ LRESULT  CMainFrameWnd::OnSysCommand(UINT uMsg, WPARAM wParam, LPARAM lParam, BO
 {
 	// 有时会在收到WM_NCDESTROY后收到wParam为SC_CLOSE的WM_SYSCOMMAND
 	if( wParam == SC_CLOSE ) {
+		CONF.BackUp();
 		::PostQuitMessage(0L);
 		bHandled = TRUE;
 		return 0;
@@ -375,11 +380,6 @@ LRESULT  CMainFrameWnd::OnSysCommand(UINT uMsg, WPARAM wParam, LPARAM lParam, BO
 		{
 			SendMessage(WM_SYSCOMMAND, SC_MAXIMIZE, 0);
 			return 0;
-		}
-		else
-		{
-			CONF.BackUp();
-			Close();
 		}
 	}
 	BOOL bZoomed = ::IsZoomed(*this);
@@ -1042,34 +1042,37 @@ void CMainFrameWnd::CheckUsbHub()
 		if(it->second.empty())
 		{
 			int nCount = mapPort_Count[(*it).first];
-			if(nCount > 3)
+			if(nCount == 0)
 			{
-				//定期清理-----拔出后10秒钟没有状态则清除
+				//定期清理-----拔出后3秒钟没有状态则清除
 				CDvrMgr::Instance().RemoveDvr((*it).first);
 			}
 			else
 			{
-				mapPort_Count[(*it).first] = ++nCount;
+				mapPort_Count[(*it).first] = --nCount;
 			}
 			continue;
-		}
-		else
-		{
-			mapPort_Count[(*it).first] = 0;
 		}
 
 		CString strVPID = GetVID_PIDString(it->second.c_str(), _T('\\'));
 		if( strVPID == CMD_VID_PID )
 		{
+			//40秒后清除
+			mapPort_Count[(*it).first] = 40;
+			
 			pDvr = CDvrMgr::Instance().PutDvr((*it).first);
 			if(pDvr)
 			{
+				Sleep(1000);
 				//枚举它
 				pDvr->MassDev();
 			}
-		}
+		}	
 		else if(strVPID == MASS_VID_PID)
 		{
+			//3秒后清除
+			mapPort_Count[(*it).first] = 3;					//3秒
+
 			wstring diskName = (*it).second;
 			diskName = diskName.substr(diskName.length() - 3);
 			if( diskName.find(']') == wstring::npos)
@@ -1077,18 +1080,18 @@ void CMainFrameWnd::CheckUsbHub()
 				continue;
 			}
 			diskName = diskName.substr(0 , 2);
-			
+
 			//恢复显示
 			pDvr = CDvrMgr::Instance().GetDvr((*it).first);
 			if(pDvr)
 			{
-				pDvr->SetDisk(diskName.c_str());
 				if(pDvr->GetId().IsEmpty())
 				{
 					pDvr->SetStatusStr(_T("无法正确获取设备ID,请重新拔插！"));
 				}
 				else
 				{
+					pDvr->SetDisk(diskName.c_str());
 					//拷贝数据
 					CDvrMgr::Instance().CopyDvrFile((*it).first, diskName);
 				}

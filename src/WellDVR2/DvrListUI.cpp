@@ -206,8 +206,9 @@ CControlUI* DvrListUI::HitPtInItem(const POINT& pt)
 		if( pt.x > rcPos.left && pt.x < rcPos.right && pt.y > rcPos.top && pt.y < rcPos.bottom )
 		{
 			//选择的行列
+			//modified by yjt 2014-10-09 行列不对称时，计算有问题
 			m_selectRow = it1 / SHAREDATA.g_dvrProp.numCol;
-			m_selectCol = it1 % SHAREDATA.g_dvrProp.numRow;
+			m_selectCol = it1 % SHAREDATA.g_dvrProp.numCol;
 
 			return pControl;
 		}

@@ -14,7 +14,7 @@
     <ProjectGuid>{C8CB1416-AF9F-43C9-AC4E-C414861AD88A}</ProjectGuid>
     <RootNamespace>GetRegisterCode</RootNamespace>
     <Keyword>MFCProj</Keyword>
-    <SccProjectName>"$/WellDVR/src/GetRegisterCode", MWKEAAAA</SccProjectName>
+    <SccProjectName>"%24/电子警察/WorkStation", KNEDAAAA</SccProjectName>
     <SccLocalPath>..\..</SccLocalPath>
     <SccProvider>MSSCCI:Microsoft Visual SourceSafe</SccProvider>
   </PropertyGroup>

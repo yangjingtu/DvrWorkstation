@@ -168,4 +168,7 @@ private:
 	CDevBase* m_pDev;
 	CCriticalSection m_cs;
 	BOOL m_bIsCopying;		//是否正在拷贝
+
+	//读取文件的次数, U盘多了之后，刚开始可能读到不到文件，一会准备好之后可以读到文件
+	short m_nReadFileCount;		
 };

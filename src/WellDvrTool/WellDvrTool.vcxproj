@@ -14,6 +14,9 @@
     <ProjectGuid>{F4A5DEAC-754A-40C7-A920-9A1E7E3988D2}</ProjectGuid>
     <Keyword>Win32Proj</Keyword>
     <RootNamespace>WellDvrTool</RootNamespace>
+    <SccProjectName>"%24/电子警察/WorkStation", KNEDAAAA</SccProjectName>
+    <SccLocalPath>..\..</SccLocalPath>
+    <SccProvider>MSSCCI:Microsoft Visual SourceSafe</SccProvider>
   </PropertyGroup>
   <Import Project="$(VCTargetsPath)\Microsoft.Cpp.Default.props" />
   <PropertyGroup Condition="'$(Configuration)|$(Platform)'=='Debug|Win32'" Label="Configuration">
