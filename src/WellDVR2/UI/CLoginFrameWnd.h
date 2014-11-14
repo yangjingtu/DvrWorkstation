@@ -28,6 +28,11 @@ public:
 
 	LRESULT MessageHandler(UINT uMsg, WPARAM wParam, LPARAM lParam, bool& bHandled);
 
+	bool IsLogin() const { return m_bLogin; }
+private:
+	bool m_bLogin;
 public:
 	CPaintManagerUI m_pm;
+
+
 };

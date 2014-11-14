@@ -14,8 +14,8 @@
     <ProjectGuid>{FA92E78F-8504-4B6E-B32F-AD1DD8D48652}</ProjectGuid>
     <RootNamespace>RegisterWnd</RootNamespace>
     <Keyword>MFCProj</Keyword>
-    <SccProjectName>"%24/电子警察/WorkStation", KNEDAAAA</SccProjectName>
-    <SccLocalPath>..\..</SccLocalPath>
+    <SccProjectName>"%24/WorkStation/src/RegisterWnd", CLAAAAAA</SccProjectName>
+    <SccLocalPath>.</SccLocalPath>
     <SccProvider>MSSCCI:Microsoft Visual SourceSafe</SccProvider>
   </PropertyGroup>
   <Import Project="$(VCTargetsPath)\Microsoft.Cpp.Default.props" />

@@ -67,15 +67,17 @@ string zcjm::jiemi(const string& szSource, const string& szPassWord)
 	if(szSource.empty() || (szSource.size()%2 != 0) || szPassWord.empty())
 		return NULL;
 
-	string src = HexToByte(szSource);
+	unsigned char* pSrc = new unsigned char[szSource.length()];
+	int len = HexToByte(szSource, &pSrc);
 
 	int ret_len = 0;
 	unsigned char* ret = new unsigned char[szSource.length() /2 + 1];
-	if(RC4((const unsigned char*)src.c_str(), src.length(),  (const unsigned char*)szPassWord.c_str(), szPassWord.length(), ret, ret_len) == NULL)
+	if(RC4((const unsigned char*)pSrc, len / 2,  (const unsigned char*)szPassWord.c_str(), szPassWord.length(), ret, ret_len) == NULL)
 		return NULL;
 	ret[ret_len] = '\0';
 	string strRlt((const char*)ret);
 	delete[] ret;
+	delete[] pSrc;
 	return strRlt;
 }
 
@@ -171,7 +173,8 @@ string zcjm::ByteToHex(unsigned char* vByte, int vLen)
 * 返回值：字节串 
 * 时间作者：	created by yjt 2012-08-29
 */
-string zcjm::HexToByte(const string& szHex)
+int zcjm::HexToByte(const string& szHex, unsigned char** vByte)
+//string zcjm::HexToByte(const string& szHex)
 {
 	if(szHex.empty())
 		return NULL;
@@ -180,7 +183,8 @@ string zcjm::HexToByte(const string& szHex)
 	if ( iLen <= 0 || 0 !=  iLen % 2 )
 		return NULL;
 
-	unsigned char* pbBuf = new unsigned char[iLen/2];
+	unsigned char* pbBuf = *vByte;
+//	unsigned char* pbBuf = new unsigned char[iLen/2];
 	int tmp1, tmp2;
 	for (int i=0; i<iLen/2; i++)
 	{
@@ -194,11 +198,16 @@ string zcjm::HexToByte(const string& szHex)
 		if(tmp2 >= 16)
 			return NULL;
 
-		pbBuf[i] = (tmp1*16+tmp2);
+//		pbBuf[i] = (tmp1*16+tmp2);
+// 	}
+// 	string strRlt((const char*)pbBuf);
+// 	delete[] pbBuf;
+// 	return strRlt;
+
+		*(pbBuf + i) = (tmp1*16 + tmp2);
 	}
-	string strRlt((const char*)pbBuf);
-	delete[] pbBuf;
-	return strRlt;
+
+	return iLen;
 }
 
 string zcjm::GetCpuID()
@@ -547,6 +556,7 @@ string zcjm::GetRegisterCode(const string& strMichineCode, const string& strPass
 * 返 回 值：	注册成功返回true, 失败返回false
 * 时间作者： created by yjt 2012-08-29
 */
+//modified by yjt 2014-10-16 添加有效期
 bool zcjm::Register(const string& strRegisterCode)
 {
 	//获取机器码
@@ -555,7 +565,13 @@ bool zcjm::Register(const string& strRegisterCode)
 		return false;
 	//获取注册码
 	strCode = GetRegisterCode(strCode);
-	if(strCode != strRegisterCode)
+	if(strRegisterCode.length() > strCode.length())
+	{
+		string strTmp = strRegisterCode.substr(0, strCode.length());
+		if(strTmp != strCode)
+			return false;
+	}
+	else if(strCode != strRegisterCode)
 		return false;
 
 	//写入配置文件
@@ -619,10 +635,49 @@ bool zcjm::IsRegister()
 		return false;
 	//获取注册码
 	strCode = GetRegisterCode(strCode);
-	if(strCode != strCodeR)
+	if(strCodeR.length() > strCode.length())
+	{
+		string strTmp = strCodeR.substr(0, strCode.length());
+		if(strTmp != strCode)
+			return false;
+
+		//计算时间
+		string pass("@abc231@");
+		string strDt = jiemi(strCodeR, pass);
+		string strS = strDt.substr(strDt.find('@') + 1, 8);
+		string strE = strDt.substr(strDt.find('-') + 1, 8);
+		CTime tm = CTime::GetCurrentTime();
+		CTime tmS = String2Time(strS);
+		CTime tmE = String2Time(strE);
+		
+		CTimeSpan tS = tm - tmS;
+		CTimeSpan tE = tmE - tm;
+
+		if(tS.GetDays() >= 0 && tE.GetDays() >= 0)
+		{
+			return true;
+		}
+		else
+		{
+			return false;
+		}
+
+	}
+	else if(strCode != strCodeR)
+	{
 		return false;
+	}
 
 	return true;
+}
+
+CTime zcjm::String2Time(string&  strS)
+{
+	int a, b, c;   
+	a = atoi(strS.substr(0, 4).c_str());
+	b = atoi(strS.substr(4, 2).c_str());
+	c = atoi(strS.substr(6, 2).c_str());  
+	return CTime(a,b,c,0,0,0); 
 }
 
 /*

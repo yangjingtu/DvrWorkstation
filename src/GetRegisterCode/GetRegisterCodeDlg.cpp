@@ -54,6 +54,7 @@ CGetRegisterCodeDlg::CGetRegisterCodeDlg(CWnd* pParent /*=NULL*/)
 	: CDialogEx(CGetRegisterCodeDlg::IDD, pParent)
 {
 	m_hIcon = AfxGetApp()->LoadIcon(IDR_MAINFRAME);
+	m_IsLong = true;
 }
 
 void CGetRegisterCodeDlg::DoDataExchange(CDataExchange* pDX)
@@ -61,6 +62,9 @@ void CGetRegisterCodeDlg::DoDataExchange(CDataExchange* pDX)
 	CDialogEx::DoDataExchange(pDX);
 	DDX_Control(pDX, IDC_EDIT1, m_edtMC);
 	DDX_Control(pDX, IDC_EDIT2, m_edtRC);
+	DDX_Control(pDX, IDC_CHK_LONG, m_chkLong);
+	DDX_Control(pDX, IDC_DATETIMEPICKER1, m_dtStart);
+	DDX_Control(pDX, IDC_DATETIMEPICKER2, m_dtEnd);
 }
 
 BEGIN_MESSAGE_MAP(CGetRegisterCodeDlg, CDialogEx)
@@ -69,6 +73,7 @@ BEGIN_MESSAGE_MAP(CGetRegisterCodeDlg, CDialogEx)
 	ON_WM_QUERYDRAGICON()
 	ON_BN_CLICKED(IDOK, &CGetRegisterCodeDlg::OnBnClickedOk)
 	ON_EN_CHANGE(IDC_EDIT1, &CGetRegisterCodeDlg::OnEnChangeEdit1)
+	ON_BN_CLICKED(IDC_CHK_LONG, &CGetRegisterCodeDlg::OnBnClickedChkLong)
 END_MESSAGE_MAP()
 
 
@@ -104,6 +109,19 @@ BOOL CGetRegisterCodeDlg::OnInitDialog()
 	SetIcon(m_hIcon, FALSE);		// 设置小图标
 
 	// TODO: 在此添加额外的初始化代码
+	m_dtStart.SetFormat(_T("yyyy-MM-dd HH:mm:ss"));
+	m_dtEnd.SetFormat(_T("yyyy-MM-dd HH:mm:ss"));
+	CTime tm = CTime::GetCurrentTime() - CTimeSpan(1, 0, 0, 0);
+	m_dtStart.SetTime(&tm);
+
+	CTime tmE = CTime::GetCurrentTime() + CTimeSpan(31, 0, 0, 0);
+	m_dtEnd.SetTime(&tmE);
+
+	m_dtStart.EnableWindow(FALSE);
+	m_dtEnd.EnableWindow(FALSE);
+
+
+	m_chkLong.SetCheck(1);
 
 	return TRUE;  // 除非将焦点设置到控件，否则返回 TRUE
 }
@@ -167,8 +185,34 @@ void CGetRegisterCodeDlg::OnBnClickedOk()
 		return;
 	}
 
-	string mc = ws2s(strMC.GetBuffer(0));
-	string rc = GetRegisterCode(mc);
+	if(!m_IsLong)
+	{
+		CTime tmS;
+		CTime tmE; 
+		CTimeSpan tmOffset;
+		DWORD dwResult = m_dtStart.GetTime(tmS);
+		dwResult = m_dtEnd.GetTime(tmE);
+		if(dwResult == GDT_VALID)
+		{
+			tmOffset = tmE - tmS;
+		}
+		if(tmOffset.GetDays() < 1)
+		{
+			MessageBox(_T("有效期不合法，请检查！"));
+			return;
+		}
+ 		CString strDV;
+		strDV.Format(_T("@%s-%s"), tmS.Format(_T("%Y%m%d")), tmE.Format(_T("%Y%m%d")));
+ 		strMC += strDV;
+	}
+
+	//string mc = ws2s(strMC.GetBuffer(0));
+	//string rc = GetRegisterCode(mc);
+	//string rc = GetRegisterCode(mc);
+	char mc[1024] = {0};
+	int len = _ws2s((wchar_t*)strMC.GetBuffer(0), mc);
+	char rc[1024] = {0};
+	len = _GetRegisterCode(mc, rc);
 
 	CString strRc;
 	strRc.Format(_T("%s"), s2ws(rc).c_str());
@@ -189,4 +233,12 @@ void CGetRegisterCodeDlg::OnEnChangeEdit1()
 		m_edtMC.SetWindowText(strMC);
 		m_edtMC.SetSel(-1);
 	}
+}
+
+void CGetRegisterCodeDlg::OnBnClickedChkLong()
+{
+	m_IsLong = m_chkLong.GetCheck();
+ 	m_dtStart.EnableWindow(!m_IsLong);
+ 	m_dtEnd.EnableWindow(!m_IsLong);
+
 }

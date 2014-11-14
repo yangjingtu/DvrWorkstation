@@ -14,6 +14,7 @@ extern "C" {
      * 时间作者： created by yjt 2012-08-29
      */
     __declspec(dllexport) string GetMachineCode();
+	__declspec(dllexport) int _GetMachineCode(char* mc);
     
     /**
      * 描	述：	获取注册码
@@ -22,7 +23,8 @@ extern "C" {
      * 返 回 值：  返回注册码, 如果生成失败返回""
      * 时间作者： created by yjt 2012-08-29
      */
-    __declspec(dllexport) string GetRegisterCode(const string& strMichineCode);
+	__declspec(dllexport) string GetRegisterCode(const string& strMichineCode);
+	__declspec(dllexport) int _GetRegisterCode(const char* chMichineCode, char* rlt);
     
     /**
      * 描	述：	注册
@@ -33,7 +35,8 @@ extern "C" {
      * 返 回 值：	注册成功返回true, 失败返回false
      * 时间作者： created by yjt 2012-08-29
      */
-    __declspec(dllexport) bool Register(const string& strRegisterCode);
+	__declspec(dllexport) bool Register(const string& strRegisterCode);
+	__declspec(dllexport) bool _Register(const char* chRegisterCode);
     
     /**
      * 描	述：	返回是否已注册
@@ -46,8 +49,10 @@ extern "C" {
     __declspec(dllexport) bool IsRegister();
 
 	__declspec(dllexport) std::string ws2s(const std::wstring& ws);
+	__declspec(dllexport) int _ws2s(const wchar_t* ws, char* _rlt);
 
 	__declspec(dllexport) std::wstring s2ws(const std::string& s);
+	__declspec(dllexport) int _s2ws(const char* s, wchar_t* _rlt);
 }
 
 /*

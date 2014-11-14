@@ -1,0 +1,35 @@
+<?xml version="1.0" encoding="utf-8" standalone="yes" ?>
+<Window size="322,550" sizebox="5,5,5,5" roundcorner="5,5">
+    <VerticalLayout bordersize="3" width="400" height="600">
+        <HorizontalLayout bordersize="2" height="60" bkimage="background-bottom.png" bkcolor="#FF48729C" bordercolor="#00008080" focusbordercolor="#000000FF">
+            <Button name="btnClose" float="true" pos="282,9,0,0" width="30" height="30" bkimage="close.png" textcolor="#FF000000" disabledtextcolor="#FFA7A6AA" align="center" normalimage="file=&apos;close.png&apos; fade=&apos;200&apos;" hotimage="close.png" pushedimage="file=&apos;close.png&apos; fade=&apos;200&apos;" />
+            <Label float="true" pos="8,-3,0,0" width="55" height="55" bkimage="key-logo.png" textcolor="#FF000000" disabledtextcolor="#FFA7A6AA" />
+        </HorizontalLayout>
+        <VerticalLayout bordersize="3" height="490" bkimage="bg.png" inset="5,0,5,10">
+            <HorizontalLayout height="80">
+                <Edit name="edtPwd" float="true" pos="15,34,0,0" width="281" height="35" bkcolor="#FFFFFFFF" textpadding="4,3,4,3" textcolor="#FF000000" disabledtextcolor="#FFA7A6AA" password="true" />
+                <Label name="lblMsg" text=" 请输入采集工作站的密码" float="true" pos="4,3,0,0" width="186" height="30" textcolor="#FF000000" disabledtextcolor="#FFA7A6AA" />
+            </HorizontalLayout>
+            <HorizontalLayout height="100">
+                <Button name="btn1" bordersize="1" float="true" pos="21,14,0,0" width="80" height="80" bkimage="btn_bg.png" bordercolor="#00FFFBF0" textcolor="#FF000000" disabledtextcolor="#FFA7A6AA" align="center" normalimage="file=&apos;Number\1.png&apos; fade=&apos;200&apos;" hotimage="Number\1.png" pushedimage="file=&apos;Number\1.png&apos; fade=&apos;200&apos;" />
+                <Button name="btn2" bordersize="1" float="true" pos="116,14,0,0" width="80" height="80" bkimage="btn_bg.png" bordercolor="#00FFFBF0" textcolor="#FF000000" disabledtextcolor="#FFA7A6AA" align="center" normalimage="file=&apos;Number\2.png&apos; fade=&apos;200&apos;" hotimage="Number\2.png" pushedimage="file=&apos;Number\2.png&apos; fade=&apos;200&apos;" />
+                <Button name="btn3" bordersize="1" float="true" pos="211,14,0,0" width="80" height="80" bkimage="btn_bg.png" bordercolor="#00FFFBF0" textcolor="#FF000000" disabledtextcolor="#FFA7A6AA" align="center" normalimage="file=&apos;Number\3.png&apos; fade=&apos;200&apos;" hotimage="Number\3.png" pushedimage="file=&apos;Number\3.png&apos; fade=&apos;200&apos;" />
+            </HorizontalLayout>
+            <HorizontalLayout height="100">
+                <Button name="btn4" bordersize="1" float="true" pos="21,9,0,0" width="80" height="80" bkimage="btn_bg.png" bordercolor="#00FFFBF0" textcolor="#FF000000" disabledtextcolor="#FFA7A6AA" align="center" normalimage="file=&apos;Number\4.png&apos; fade=&apos;200&apos;" hotimage="Number\4.png" pushedimage="file=&apos;Number\4.png&apos; fade=&apos;200&apos;" />
+                <Button name="btn5" bordersize="1" float="true" pos="116,10,0,0" width="80" height="80" bkimage="btn_bg.png" bordercolor="#00FFFBF0" textcolor="#FF000000" disabledtextcolor="#FFA7A6AA" align="center" normalimage="file=&apos;Number\5.png&apos; fade=&apos;200&apos;" hotimage="Number\5.png" pushedimage="file=&apos;Number\5.png&apos; fade=&apos;200&apos;" />
+                <Button name="btn6" bordersize="1" float="true" pos="211,9,0,0" width="80" height="80" bkimage="btn_bg.png" bordercolor="#00FFFBF0" textcolor="#FF000000" disabledtextcolor="#FFA7A6AA" align="center" normalimage="file=&apos;Number\6.png&apos; fade=&apos;200&apos;" hotimage="Number\6.png" pushedimage="file=&apos;Number\6.png&apos; fade=&apos;200&apos;" />
+            </HorizontalLayout>
+            <HorizontalLayout height="100">
+                <Button name="btn7" bordersize="1" float="true" pos="21,9,0,0" width="80" height="80" bkimage="btn_bg.png" bordercolor="#00FFFBF0" textcolor="#FF000000" disabledtextcolor="#FFA7A6AA" align="center" normalimage="file=&apos;Number\7.png&apos; fade=&apos;200&apos;" hotimage="Number\7.png" pushedimage="file=&apos;Number\7.png&apos; fade=&apos;200&apos;" />
+                <Button name="btn8" bordersize="1" float="true" pos="116,9,0,0" width="80" height="80" bkimage="btn_bg.png" bordercolor="#00FFFBF0" textcolor="#FF000000" disabledtextcolor="#FFA7A6AA" align="center" normalimage="file=&apos;Number\8.png&apos; fade=&apos;200&apos;" hotimage="Number\8.png" pushedimage="file=&apos;Number\8.png&apos; fade=&apos;200&apos;" />
+                <Button name="btn9" bordersize="1" float="true" pos="211,9,0,0" width="80" height="80" bkimage="btn_bg.png" bordercolor="#00FFFBF0" textcolor="#FF000000" disabledtextcolor="#FFA7A6AA" align="center" normalimage="file=&apos;Number\9.png&apos; fade=&apos;200&apos;" hotimage="Number\9.png" pushedimage="file=&apos;Number\9.png&apos; fade=&apos;200&apos;" />
+            </HorizontalLayout>
+            <HorizontalLayout height="100">
+                <Button name="btn0" bordersize="1" float="true" pos="116,8,0,0" width="80" height="80" bkimage="btn_bg.png" bordercolor="#00FFFBF0" textcolor="#FF000000" disabledtextcolor="#FFA7A6AA" align="center" normalimage="file=&apos;Number\0.png&apos; fade=&apos;200&apos;" hotimage="Number\0.png" pushedimage="file=&apos;Number\0.png&apos; fade=&apos;200&apos;" />
+                <Button name="btnok" bordersize="1" float="true" pos="211,9,0,0" width="80" height="80" bordercolor="#00FFFBF0" textcolor="#FF000000" disabledtextcolor="#FFA7A6AA" align="center" normalimage="file=&apos;ok2.png&apos; fade=&apos;200&apos;" hotimage="ok2.png" pushedimage="file=&apos;ok2.png&apos; fade=&apos;200&apos;" />
+                <Button name="btnback" bordersize="1" float="true" pos="21,8,0,0" width="80" height="80" bordercolor="#00FFFBF0" textcolor="#FF000000" disabledtextcolor="#FFA7A6AA" align="center" normalimage="file=&apos;back1.png&apos; fade=&apos;200&apos;" hotimage="back1.png" pushedimage="file=&apos;back1.png&apos; fade=&apos;200&apos;" />
+            </HorizontalLayout>
+        </VerticalLayout>
+    </VerticalLayout>
+</Window>

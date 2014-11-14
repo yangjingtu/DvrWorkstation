@@ -70,7 +70,7 @@ public:
      * 时间作者： created by yjt 2012-08-29
      */
     static bool IsRegister();
-    
+
 protected:
     /**
      * 加密
@@ -117,7 +117,7 @@ private:
     /**
      * 把十六进制字符串转为字节码pbBuffer，解码
      */
-    static string HexToByte(const string& szHex);
+    static int HexToByte(const string& szHex, unsigned char** vByte);
 
     /**
      *	获取系统信息
@@ -130,6 +130,8 @@ private:
     static string GetMACInfo(void);
 
 	static string GetCpuID(void);
+
+	static CTime zcjm::String2Time(string&  strS);
 };
 
 #endif // #ifndef _ENCRYPT_RC4_

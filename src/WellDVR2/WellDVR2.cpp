@@ -9,10 +9,10 @@ CMiniDumper g_miniDumper( true );
 
 #include "CMainFrameWnd.h"
 #include "ShareData.h"
-#include "UI/RegisterWnd.h"
 #include "chmzc.h"
 #include "ftp/FtpHelper.h"
 #include "network/SockInit.h"
+#include "UI/UIHelper.h"
 
 
 #ifdef _DEBUG
@@ -111,12 +111,7 @@ int APIENTRY WinMain(HINSTANCE hInstance, HINSTANCE hPrevInstance, LPSTR lpCmdLi
 	//检查注册
 	while(!IsRegister())
 	{
-		CRegisterWnd* pWnd = new CRegisterWnd;
-		pWnd->Create(NULL, _T(""), UI_WNDSTYLE_DIALOG, 0, 0, 0, 0, 0, NULL);
-		pWnd->CenterWindow();
-		pWnd->ShowModal();
-
-		if(!pWnd->IsRegister())
+		if(!WELLUI.Register())
 		{
 			LOGS(_T("系统未合法注册"));
 			return 0;

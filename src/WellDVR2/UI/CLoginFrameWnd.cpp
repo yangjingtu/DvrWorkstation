@@ -2,7 +2,8 @@
 #include "CLoginFrameWnd.h"
 
 
-CLoginFrameWnd::CLoginFrameWnd() 
+CLoginFrameWnd::CLoginFrameWnd()
+	: m_bLogin(false)
 {
 
 }
@@ -20,7 +21,7 @@ UINT CLoginFrameWnd::GetClassStyle() const
 void CLoginFrameWnd::OnFinalMessage(HWND /*hWnd*/) 
 { 
 	m_pm.RemovePreMessageFilter(this);
-	delete this; 
+	//delete this; 
 }
 
 void CLoginFrameWnd::Init() 

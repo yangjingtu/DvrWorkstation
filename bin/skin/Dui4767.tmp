@@ -1,0 +1,32 @@
+<?xml version="1.0" encoding="utf-8" standalone="yes" ?>
+<Window size="300,400" sizebox="5,0,5,5" roundcorner="5,5">
+    <VerticalLayout width="400" height="600">
+        <HorizontalLayout width="300" height="65" bkimage="background-bottom.png" bkcolor="#FF48729C">
+            <Button float="true" pos="232,4,0,0" width="60" height="60" bkimage="close.png" textcolor="#FF000000" disabledtextcolor="#FFA7A6AA" align="center" />
+        </HorizontalLayout>
+        <VerticalLayout bordersize="3" width="300" height="335" bkimage="bg.png" bkcolor="#FFA6CAF0" inset="5,0,5,5">
+            <HorizontalLayout width="300" height="66">
+                <Edit float="true" pos="11,23,0,0" width="280" height="30" bkcolor="#FFFFFFFF" textpadding="4,3,4,3" textcolor="#FF000000" disabledtextcolor="#FFA7A6AA" />
+            </HorizontalLayout>
+            <HorizontalLayout width="300" height="66">
+                <Button float="true" pos="14,3,0,0" width="60" height="60" bkimage="file=&apos;num-key.jpg&apos; source=&apos;275,0,550,270&apos;" textcolor="#FF000000" disabledtextcolor="#FFA7A6AA" align="center" />
+                <Button float="true" pos="120,3,0,0" width="60" height="60" bkimage="file=&apos;num-key.jpg&apos; source=&apos;580,0,850,270&apos;" textcolor="#FF000000" disabledtextcolor="#FFA7A6AA" align="center" />
+                <Button float="true" pos="226,3,0,0" width="60" height="60" bkimage="file=&apos;num-key.jpg&apos; source=&apos;860,0,1130,270&apos;" textcolor="#FF000000" disabledtextcolor="#FFA7A6AA" align="center" />
+            </HorizontalLayout>
+            <HorizontalLayout width="300" height="66">
+                <Button float="true" pos="14,3,0,0" width="60" height="60" bkimage="file=&apos;num-key.jpg&apos; source=&apos;0,280,270,550&apos;" textcolor="#FF000000" disabledtextcolor="#FFA7A6AA" align="center" />
+                <Button float="true" pos="120,3,0,0" width="60" height="60" bkimage="file=&apos;num-key.jpg&apos; source=&apos;280,280,550,550&apos;" textcolor="#FF000000" disabledtextcolor="#FFA7A6AA" align="center" />
+                <Button float="true" pos="226,3,0,0" width="60" height="60" bkimage="file=&apos;num-key.jpg&apos; source=&apos;550,280,820,550&apos;" textcolor="#FF000000" disabledtextcolor="#FFA7A6AA" align="center" />
+            </HorizontalLayout>
+            <HorizontalLayout width="300" height="66">
+                <Button float="true" pos="14,3,0,0" width="60" height="60" bkimage="file=&apos;num-key.jpg&apos; source=&apos;830,270,1100,550&apos;" textcolor="#FF000000" disabledtextcolor="#FFA7A6AA" align="center" />
+                <Button float="true" pos="120,3,0,0" width="60" height="60" bkimage="file=&apos;num-key.jpg&apos; source=&apos;140,550,410,820&apos;" textcolor="#FF000000" disabledtextcolor="#FFA7A6AA" align="center" />
+                <Button float="true" pos="227,3,0,0" width="60" height="60" bkimage="file=&apos;num-key.jpg&apos; source=&apos;700,550,970,820&apos;" textcolor="#FF000000" disabledtextcolor="#FFA7A6AA" align="center" />
+            </HorizontalLayout>
+            <HorizontalLayout width="300" height="66">
+                <Button float="true" pos="15,3,0,0" width="60" height="60" bkimage="file=&apos;num-key.jpg&apos; source=&apos;0,0,270,270&apos;" textcolor="#FF000000" disabledtextcolor="#FFA7A6AA" align="center" />
+                <Button float="true" pos="120,3,0,0" width="166" height="60" textcolor="#FF000000" disabledtextcolor="#FFA7A6AA" align="center" />
+            </HorizontalLayout>
+        </VerticalLayout>
+    </VerticalLayout>
+</Window>

@@ -11,16 +11,13 @@
 
 #include <dbt.h>
 
-#include "UI/MsgWnd.h"
-#include "UI/CLoginFrameWnd.h"
+#include "UI/UIHelper.h"
 #include "dvr/interface.h"
 #include "IniFile.h"
 #include "ShareData.h"
 #include "DvrMgr.h"
 #include "UI/DvrListUI.h"
 #include "DataBase/DataBase.h"
-#include "UI/MenuWnd.h"
-#include "UI/AboutWnd.h"
 #include "ftp/FtpMgr.h"
 #include "Config.h"
 #include "DvrLocation.h"
@@ -122,11 +119,7 @@ void  CMainFrameWnd::Init()
 void  CMainFrameWnd::OnPrepare() 
 { 
 	//登录信息
-	//         CLoginFrameWnd* pLoginFrame = new CLoginFrameWnd();
-	//         if( pLoginFrame == NULL ) { Close(); return; }
-	//         pLoginFrame->Create(m_hWnd, _T(""), UI_WNDSTYLE_DIALOG, 0, 0, 0, 0, 0, NULL);
-	//         pLoginFrame->CenterWindow();
-	//         pLoginFrame->ShowModal();
+	//WELLUI.Login();
 
 	SHAREDATA.g_pMainFrame = this;
 
@@ -173,11 +166,7 @@ void  CMainFrameWnd::Notify(TNotifyUI& msg)
 			}
 			else
 			{
-				if(!m_bTopWnd)
-				{
-					CONF.BackUp();
-					Close();
-				}
+				CloseWnd();
 			}
 			return; 
 		}
@@ -185,9 +174,7 @@ void  CMainFrameWnd::Notify(TNotifyUI& msg)
 		CStdString name = msg.pSender->GetName();
 		if( name == _T("quitbtn") ) 
 		{
-			CONF.BackUp();
-			LOGS(_T("退出系统"));
-			PostQuitMessage(0);
+			CloseWnd();
 			return;
 		}
 
@@ -196,9 +183,7 @@ void  CMainFrameWnd::Notify(TNotifyUI& msg)
 	}
 	else if( msg.sType == _T("Quit"))
 	{
-		CONF.BackUp();
-		LOGS(_T("退出系统"));
-		PostQuitMessage(0);
+		CloseWnd();
 		return;
 	}
 	else if( msg.sType == _T("menu_Open"))
@@ -208,15 +193,7 @@ void  CMainFrameWnd::Notify(TNotifyUI& msg)
 	}
 	else if( msg.sType == _T("menu_About"))
 	{
-        CAboutWnd* pAboutFrame = new CAboutWnd();
-        if( pAboutFrame == NULL ) 
-		{ 
-			return; 
-		}
-        pAboutFrame->Create(m_hWnd, _T(""), UI_WNDSTYLE_DIALOG, 0, 0, 0, 0, 0, NULL);
-        pAboutFrame->CenterWindow();
-        pAboutFrame->ShowModal();
-		return;
+		WELLUI.AboutWnd();        
 	}
 }
 
@@ -458,9 +435,7 @@ LRESULT CMainFrameWnd::OnSysKeyHandle(WPARAM wParam, LPARAM lParam)
 	}
 	else if(nChar == 'Q')
 	{
-		LOGS(_T("快捷键 退出系统"));
-		CONF.BackUp();
-		Close();
+		CloseWnd();
 	}
 	else if(nChar == 'M')
 	{
@@ -867,21 +842,9 @@ LRESULT CMainFrameWnd::OnNotifyData(WPARAM wParam, LPARAM lParam)
 	{
 		DuiLib::CPoint CursorPos;
 		GetCursorPos(&CursorPos);
-		CMenuWnd* pMenu = new CMenuWnd();
-		if( pMenu == NULL ) 
-		{ 
-			return S_OK; 
-		}
-
 		POINT pt = {CursorPos.x, CursorPos.y};
-// 		::ClientToScreen(*this, &pt);
-// 		if(pt.x < 0 || pt.y < 0)
-// 		{
-// 			pt.x = CursorPos.x;
-// 			pt.y = CursorPos.y;
-// 		}
-
-		pMenu->Init(m_pDvrListUI, pt);
+		//弹出菜单
+		WELLUI.MenuWnd(m_pDvrListUI, pt);
 	}
 	else if(WM_NOTIFYID == wParam && WM_LBUTTONDBLCLK == lParam)
 	{
@@ -892,21 +855,7 @@ LRESULT CMainFrameWnd::OnNotifyData(WPARAM wParam, LPARAM lParam)
 
 bool CMainFrameWnd::Alert(const CString& strMsg, const CString& title, const CString& img)
 {
-	LOGE(strMsg.GetString());
-
-	CMsgWnd* pMsgWnd = new CMsgWnd;
-	pMsgWnd->Create(m_hWnd, _T(""), UI_WNDSTYLE_DIALOG, 0, 0, 0, 0, 0, NULL);
-
-	pMsgWnd->SetMsg(strMsg, title, img);
-
-	pMsgWnd->CenterWindow();
-	pMsgWnd->ShowModal();
-	bool bOk = pMsgWnd->IsPressOk();
-	if(pMsgWnd)
-		delete pMsgWnd;
-	pMsgWnd = NULL;
-
-	return bOk;
+	return WELLUI.Alert(strMsg, title, img);
 }
 
 void CMainFrameWnd::ShowFreeSpace()
@@ -1201,4 +1150,20 @@ void CMainFrameWnd::DrawSpacePie(float nUsed)
 	TextOut(hdc, r, r, strPecent, strPecent.GetLength());
 
 	::ReleaseDC(this->m_hWnd, hdc);
+}
+
+bool CMainFrameWnd::KeyFrameCheck()
+{
+	return WELLUI.Check(_T("88888888"), this->m_hWnd);
+}
+
+bool CMainFrameWnd::CloseWnd()
+{
+	if(KeyFrameCheck())
+	{
+		CONF.BackUp();
+		Close();
+		return true;
+	}
+	return false;
 }

@@ -35,4 +35,12 @@ public:
 	CEdit m_edtRC;
 	afx_msg void OnBnClickedOk();
 	afx_msg void OnEnChangeEdit1();
+	CButton m_chkLong;
+	afx_msg void OnBnClickedChkLong();
+
+private:
+	bool m_IsLong;
+public:
+	CDateTimeCtrl m_dtStart;
+	CDateTimeCtrl m_dtEnd;
 };

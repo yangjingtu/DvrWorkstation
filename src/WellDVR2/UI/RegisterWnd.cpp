@@ -24,7 +24,7 @@ UINT CRegisterWnd::GetClassStyle() const
 void CRegisterWnd::OnFinalMessage(HWND /*hWnd*/) 
 { 
 	m_pm.RemovePreMessageFilter(this);
-	delete this; 
+	//delete this; 
 }
 
 void CRegisterWnd::Init() 

@@ -1,0 +1,49 @@
+<?xml version="1.0" encoding="utf-8" standalone="yes" ?>
+<Window size="343,200" sizebox="4,4,6,6" caption="0,0,0,30" roundcorner="5,5" defaultfontcolor="#FF00FFFF">
+    <Font name="宋体" size="8" bold="false" italic="false" />
+    <Container focusbordercolor="#000000FF" inset="5,5,5,5">
+        <HorizontalLayout bordersize="2" padding="5,5,5,5">
+            <VerticalLayout name="cUI1">
+                <VerticalLayout name="cUI2" bkimage="file=&apos;dvr.png&apos;">
+                    <Container />
+                    <Label name="lbldev" text="无设备" textcolor="#00FF0000" disabledtextcolor="#FFA7A6AA" align="center" />
+                    <Container />
+                </VerticalLayout>
+            </VerticalLayout>
+            <VerticalLayout name="vlUI2" padding="10,20,10,10">
+                <HorizontalLayout>
+                    <Label name="lblid" text="ID" width="40" textcolor="#00800000" disabledtextcolor="#FFA7A6AA" />
+                    <Label name="id" text="012345" textcolor="#FF000000" disabledtextcolor="#FFA7A6AA" />
+                </HorizontalLayout>
+                <HorizontalLayout>
+                    <Label name="lblname" text="名字" width="40" textcolor="#00800000" disabledtextcolor="#FFA7A6AA" />
+                    <Label name="name" text="012345" textcolor="#FF000000" disabledtextcolor="#FFA7A6AA" />
+                </HorizontalLayout>
+                <HorizontalLayout>
+                    <Label name="lbldisk" text="盘符" width="40" textcolor="#00800000" disabledtextcolor="#FFA7A6AA" />
+                    <Label name="disk" text="012345" textcolor="#FF000000" disabledtextcolor="#FFA7A6AA" />
+                </HorizontalLayout>
+                <HorizontalLayout>
+                    <Label name="lblprocess" text="进度" width="40" textcolor="#00800000" disabledtextcolor="#FFA7A6AA" />
+                    <Progress name="process" height="12" textcolor="#FF000000" disabledtextcolor="#FFA7A6AA" align="center" min="0" max="100" value="20" hor="true" />
+                </HorizontalLayout>
+                <HorizontalLayout>
+                    <Label name="lblspeed" text="速度" width="40" textcolor="#00800000" disabledtextcolor="#FFA7A6AA" />
+                    <Label name="speed" text="012345" textcolor="#FF000000" disabledtextcolor="#FFA7A6AA" />
+                </HorizontalLayout>
+                <HorizontalLayout>
+                    <Label name="lblstatus" text="状态" width="40" textcolor="#00800000" disabledtextcolor="#FFA7A6AA" />
+                    <Label name="lblStatu" textcolor="#FF000000" disabledtextcolor="#FFA7A6AA" />
+                </HorizontalLayout>
+                <HorizontalLayout>
+                    <Label name="lblFl" text="文件" width="40" textcolor="#00800000" disabledtextcolor="#FFA7A6AA" />
+                    <Label name="lblfile" textcolor="#FF000000" disabledtextcolor="#FFA7A6AA" />
+                </HorizontalLayout>
+                <HorizontalLayout>
+                    <Label name="lblnone" width="40" textcolor="#00800000" disabledtextcolor="#FFA7A6AA" />
+                    <Button name="btnStop" text="停止传输" bkcolor="#FFA7A6AA" textcolor="#FF000000" disabledtextcolor="#FFA7A6AA" align="center" normalimage="file=&apos;button_nor.bmp&apos; corner=&apos;3,3,3,3&apos; mask=&apos;0xffffffff&apos;" hotimage="file=&apos;button_over.bmp&apos; corner=&apos;3,3,3,3&apos; " pushedimage="file=&apos;button_down.bmp&apos; corner=&apos;3,3,3,3&apos;" />
+                </HorizontalLayout>
+            </VerticalLayout>
+        </HorizontalLayout>
+    </Container>
+</Window>

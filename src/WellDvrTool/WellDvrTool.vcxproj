@@ -14,7 +14,7 @@
     <ProjectGuid>{F4A5DEAC-754A-40C7-A920-9A1E7E3988D2}</ProjectGuid>
     <Keyword>Win32Proj</Keyword>
     <RootNamespace>WellDvrTool</RootNamespace>
-    <SccProjectName>"%24/电子警察/WorkStation", KNEDAAAA</SccProjectName>
+    <SccProjectName>"%24/WorkStation/src/WellDvrTool", LLAAAAAA</SccProjectName>
     <SccLocalPath>..\..</SccLocalPath>
     <SccProvider>MSSCCI:Microsoft Visual SourceSafe</SccProvider>
   </PropertyGroup>

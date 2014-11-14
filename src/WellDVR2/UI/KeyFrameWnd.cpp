@@ -2,7 +2,9 @@
 #include "KeyFrameWnd.h"
 
 
-CKeyFrameWnd::CKeyFrameWnd(void)
+CKeyFrameWnd::CKeyFrameWnd(const CStdString& strCheck)
+	: m_strCheck(strCheck)
+	, m_bOk(false)
 {
 }
 
@@ -24,27 +26,76 @@ UINT CKeyFrameWnd::GetClassStyle() const
 void CKeyFrameWnd::OnFinalMessage(HWND /*hWnd*/) 
 { 
 	m_pm.RemovePreMessageFilter(this);
-	delete this; 
 }
 
 void CKeyFrameWnd::Init() 
 {
-	CComboUI* pAccountCombo = static_cast<CComboUI*>(m_pm.FindControl(_T("accountcombo")));
-	CEditUI* pAccountEdit = static_cast<CEditUI*>(m_pm.FindControl(_T("accountedit")));
-	if( pAccountCombo && pAccountEdit ) pAccountEdit->SetText(pAccountCombo->GetText());
-	pAccountEdit->SetFocus();
+	m_btnClose = static_cast<CButtonUI*>(m_pm.FindControl(_T("btnClose")));
+
+	m_lblMsg = static_cast<CEditUI*>(m_pm.FindControl(_T("lblMsg")));
+	m_edtPwd  = static_cast<CEditUI*>(m_pm.FindControl(_T("edtPwd")));
+	m_btn1  = static_cast<CButtonUI*>(m_pm.FindControl(_T("btn1")));
+	m_btn2  = static_cast<CButtonUI*>(m_pm.FindControl(_T("btn2")));
+	m_btn3 = static_cast<CButtonUI*>(m_pm.FindControl(_T("btn3")));
+	m_btn4 = static_cast<CButtonUI*>(m_pm.FindControl(_T("btn4")));
+	m_btn5 = static_cast<CButtonUI*>(m_pm.FindControl(_T("btn5")));
+	m_btn6 = static_cast<CButtonUI*>(m_pm.FindControl(_T("btn6")));
+	m_btn7 = static_cast<CButtonUI*>(m_pm.FindControl(_T("btn7")));
+	m_btn8 = static_cast<CButtonUI*>(m_pm.FindControl(_T("btn8")));
+	m_btn9 = static_cast<CButtonUI*>(m_pm.FindControl(_T("btn9")));
+	m_btn0 = static_cast<CButtonUI*>(m_pm.FindControl(_T("btn0")));
+	m_btnBack = static_cast<CButtonUI*>(m_pm.FindControl(_T("btnback")));
+	m_btnOk = static_cast<CButtonUI*>(m_pm.FindControl(_T("btnok")));
+	
+	m_edtPwd->SetFocus();
 }
 
 void CKeyFrameWnd::Notify(TNotifyUI& msg)
 {
-	if( msg.sType == _T("click") ) {
-		if( msg.pSender->GetName() == _T("closebtn") ) { PostQuitMessage(0); return; }
-		else if( msg.pSender->GetName() == _T("loginBtn") ) { Close(); return; }
-	}
-	else if( msg.sType == _T("itemselect") ) {
-		if( msg.pSender->GetName() == _T("accountcombo") ) {
-			CEditUI* pAccountEdit = static_cast<CEditUI*>(m_pm.FindControl(_T("accountedit")));
-			if( pAccountEdit ) pAccountEdit->SetText(msg.pSender->GetText());
+	if( msg.sType == _T("click") ) 
+	{
+		if( msg.pSender == m_btnClose ) 
+		{ 
+			Close();
+			return; 
+		}
+		else if( msg.pSender->GetName() == _T("btnok") ) 
+		{ 
+			return InputOk();
+		}
+		else if( msg.pSender->GetName() == _T("btnback") ) 
+		{ 
+			return InputBack();
+		}else if( msg.pSender->GetName() == _T("btn0") ) 
+		{ 
+			return InputNumber(_T("0"));
+		}else if( msg.pSender->GetName() == _T("btn1") ) 
+		{ 
+			return InputNumber(_T("1"));
+		}else if( msg.pSender->GetName() == _T("btn2") ) 
+		{ 
+			return InputNumber(_T("2"));
+		}else if( msg.pSender->GetName() == _T("btn3") ) 
+		{ 
+			return InputNumber(_T("3"));
+		}else if( msg.pSender->GetName() == _T("btn4") ) 
+		{ 
+			return InputNumber(_T("4"));
+		}else if( msg.pSender->GetName() == _T("btn5") ) 
+		{ 
+			return InputNumber(_T("5"));
+		}else if( msg.pSender->GetName() == _T("btn6") ) 
+		{ 
+			return InputNumber(_T("6"));
+		}else if( msg.pSender->GetName() == _T("btn7") ) 
+		{ 
+			return InputNumber(_T("7"));
+		}else if( msg.pSender->GetName() == _T("btn8") ) 
+		{ 
+			return InputNumber(_T("8")); 
+		}else if( msg.pSender->GetName() == _T("btn9") ) 
+		{ 
+			return InputNumber(_T("9")); 
 		}
 	}
 }
@@ -141,22 +192,44 @@ LRESULT CKeyFrameWnd::HandleMessage(UINT uMsg, WPARAM wParam, LPARAM lParam)
 
 LRESULT CKeyFrameWnd::MessageHandler(UINT uMsg, WPARAM wParam, LPARAM lParam, bool& bHandled)
 {
-	if( uMsg == WM_KEYDOWN ) {
-		if( wParam == VK_RETURN ) {
-			CEditUI* pEdit = static_cast<CEditUI*>(m_pm.FindControl(_T("accountedit")));
-			if( pEdit->GetText().IsEmpty() ) pEdit->SetFocus();
-			else {
-				pEdit = static_cast<CEditUI*>(m_pm.FindControl(_T("pwdedit")));
-				if( pEdit->GetText().IsEmpty() ) pEdit->SetFocus();
-				else Close();
-			}
-			return true;
-		}
-		else if( wParam == VK_ESCAPE ) {
-			PostQuitMessage(0);
-			return true;
-		}
+	return S_OK;
+}
 
+//////////////////////////////////////////////////////////////////////////
+//输入数字
+void CKeyFrameWnd::InputNumber(const CStdString& strNumber)
+{
+	CStdString strPwd = m_edtPwd->GetText();
+	strPwd += strNumber;
+	m_edtPwd->SetText(strPwd);
+}
+
+void CKeyFrameWnd::InputBack()
+{
+	CStdString strPwd = m_edtPwd->GetText();
+	if(strPwd.GetLength() == 0)
+		return;
+	strPwd = strPwd.Left(strPwd.GetLength() - 1);
+	m_edtPwd->SetText(strPwd);
+}
+
+void CKeyFrameWnd::InputOk()
+{
+	CStdString strPwd = m_edtPwd->GetText();
+	if(strPwd.IsEmpty())
+	{
+		m_bOk = false;
+		return;
 	}
-	return false;
+
+	if(strPwd == m_strCheck)
+	{
+		m_bOk = true;
+		Close();
+	}
+	else
+	{
+		m_lblMsg->SetText(_T("校验失败，请重新输入"));
+		m_edtPwd->SetFocus();
+	}
 }

@@ -101,6 +101,10 @@ private:
 	void RemoveUsbDevice(const CString& strName);
 	void AddUsbDevice( const CString& strName);
 	CString GetVID_PIDString(const CString &strName, wchar_t chSplit);
+
+	bool CloseWnd();
+	bool KeyFrameCheck();
+
 private:
 	HINSTANCE m_hInstance;
 

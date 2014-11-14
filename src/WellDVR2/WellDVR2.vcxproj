@@ -298,6 +298,7 @@
   </ItemDefinitionGroup>
   <ItemGroup>
     <ClCompile Include="CMainFrameWnd.cpp" />
+    <ClCompile Include="UI\UIHelper.cpp" />
     <ClCompile Include="UI\AboutWnd.cpp" />
     <ClCompile Include="ConvertVideo\Avi2Flv.cpp" />
     <ClCompile Include="Config.cpp" />
@@ -380,6 +381,7 @@
     <ClCompile Include="WellDVR2.cpp" />
   </ItemGroup>
   <ItemGroup>
+    <ClInclude Include="UI\UIHelper.h" />
     <ClInclude Include="UI\AboutWnd.h" />
     <ClInclude Include="ConvertVideo\Avi2Flv.h" />
     <ClInclude Include="CMainFrameWnd.h" />
