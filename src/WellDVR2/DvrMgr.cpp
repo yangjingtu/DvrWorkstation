@@ -38,6 +38,7 @@ void CDvrMgrBase::Init()
 			m_vecDvrWnd.push_back(pDvrWnd);
 		}
 	}
+
 	INIT_LOCK;
 }
 
@@ -93,7 +94,8 @@ int CDvrMgrBase::GetWndIndex(const wstring& strPort)
 	int col = -1;
 	GetRowCol(index, row, col);
 
-	return (row * SHAREDATA.g_dvrProp.numCol + col);
+	index = (row * SHAREDATA.g_dvrProp.numCol + col);
+	return index >= SHAREDATA.g_dvrProp.numDvr ? -1 : index;
 }
 
 CDvrWnd* CDvrMgrBase::GetDvr(const wstring& strPort)
@@ -124,12 +126,27 @@ CDvrWnd* CDvrMgrBase::GetDvr(int row, int col)
 
 CDvrMgr::CDvrMgr(void)
 {
-	m_vecClear.resize(SHAREDATA.g_dvrProp.numDvr);
+	m_vecClear.reserve(SHAREDATA.g_dvrProp.numDvr);
 	//AfxBeginThread((AFX_THREADPROC)ClearProc, NULL);
+
+	for (int i = 0; i < SHAREDATA.g_dvrProp.numDvr; ++i)
+	{
+		m_mapDvrWnd[i] = new DvrWndInfo;
+	}
 }
 
 CDvrMgr::~CDvrMgr()
 {
+	for (int i = 0; i < SHAREDATA.g_dvrProp.numDvr; ++i)
+	{
+		DvrWndInfo* pDwi = m_mapDvrWnd[i];
+		if(pDwi)
+		{
+			delete pDwi; 
+			pDwi = NULL;
+		}
+	}
+	m_mapDvrWnd.clear();
 }
 
 CDvrMgr& CDvrMgr::Instance()
@@ -147,7 +164,13 @@ CDvrWnd* CDvrMgr::PutDvr(const wstring& strPort)
 		return NULL;
 	}
 
-	int index = GetWndIndex(strPort);
+	int index = -1;
+#ifdef ONE_DVR
+	index = 0;
+#else
+	index = GetWndIndex(strPort);
+#endif
+
 	if(index == -1)
 	{
 		map<wstring, int>::iterator itF = m_mapAlertPort.find(strPort);
@@ -166,11 +189,11 @@ CDvrWnd* CDvrMgr::PutDvr(const wstring& strPort)
 
 		return NULL;
 	}
-
 	CDvrWnd* dvr = m_vecDvrWnd[index];
+
 	if(dvr == NULL)
 	{
-		dvr = new CDvrWnd;
+		return NULL;
 	}
 
 	CDevBase* pDev = dvr->GetDevPtr();
@@ -188,10 +211,11 @@ CDvrWnd* CDvrMgr::PutDvr(const wstring& strPort)
 	CString strID;
 	if( !GetDvrId(strID, &pDev) )
 	{					
+		LOGS(_T("读取设备ID失败或者设备ID为空"));
 		SHAREDATA.g_pMainFrame->ShowMsgInfo(_T("读取设备ID失败或者设备ID为空"));
 		delete pDev;
 		pDev = NULL;
-		return false;
+		return NULL;
 	}
 
 	CString strName = DB.QueryNameFormID(strID); //DB.GetNameFormID(strID);
@@ -207,14 +231,16 @@ CDvrWnd* CDvrMgr::PutDvr(const wstring& strPort)
 	//同步时间
 	pDev->SetTimeEx();
 
-	DvrWndInfo dwi;
-	dwi.m_strId = dvr->GetId();
-	dwi.m_strName = dvr->GetName();
-	dwi.m_status = dvr->GetStatus();
-	dwi.m_strStatus = dvr->GetStatusStr();
-
 	//插入并读取ID时，缓存
-	m_mapDvrWnd[index] = dwi;
+	DvrWndInfo* pDwi = m_mapDvrWnd[index];
+	if(pDwi)
+	{
+		pDwi->m_strId = dvr->GetId();
+		pDwi->m_strName = dvr->GetName();	
+		pDwi->m_strDisk.Empty();
+		pDwi->m_status = dvr->GetStatus();
+		pDwi->m_strStatus = dvr->GetStatusStr();
+	}
 
 	InsertDvrDevice(strID, _T("DVR设备接入"));
 
@@ -271,7 +297,12 @@ void CDvrMgr::RemoveDvr(const wstring& strPort)
 void CDvrMgr::CopyDvrFile(const wstring& strPort, const wstring& diskName)
 {
 	LOCK;
-	int nWndIndex = GetWndIndex(strPort);
+	int nWndIndex = -1;
+#ifdef ONE_DVR
+	nWndIndex = 0;
+#else
+	nWndIndex = GetWndIndex(strPort);
+#endif
 	if(nWndIndex == -1)
 	{
 		return;
@@ -281,29 +312,33 @@ void CDvrMgr::CopyDvrFile(const wstring& strPort, const wstring& diskName)
 	if(pDvr == NULL)
 		return;
 
-//  	if(!pDvr->GetDisk().IsEmpty() && pDvr->GetId().IsEmpty())
-// 	{
-// 		//盘符不为空，但ID为空
-//  		USBHUB.UnInstallUsb(diskName.at(0));
-// 		return;
-// 	}
-
-	//如果ID为空，则用缓存的恢复
-	if(pDvr->GetId().IsEmpty() && !m_mapDvrWnd[nWndIndex].m_strId.IsEmpty())
-	{
-		pDvr->SetId(m_mapDvrWnd[nWndIndex].m_strId);
-		pDvr->SetName(m_mapDvrWnd[nWndIndex].m_strName);
-		pDvr->SetStatus(m_mapDvrWnd[nWndIndex].m_status);
-		pDvr->SetStatusStr(m_mapDvrWnd[nWndIndex].m_strStatus);
-		m_mapDvrWnd[nWndIndex].m_strId.Empty();
-		m_mapDvrWnd[nWndIndex].m_strName.Empty();
-		m_mapDvrWnd[nWndIndex].m_strStatus.Empty();
-		m_mapDvrWnd[nWndIndex].m_status = DVR_DISABLE;
-	}
+	DvrWndInfo* pDwi = m_mapDvrWnd[nWndIndex];
 
 	if(pDvr->GetId().IsEmpty())
 	{
-		return;
+		//如果ID为空, 同时盘符没变，则用缓存的恢复
+		if(pDwi && !pDwi->m_strId.IsEmpty() && pDwi->m_strDisk.Compare(diskName.c_str()) == 0)
+		{
+			pDvr->SetId(pDwi->m_strId);
+			pDvr->SetName(pDwi->m_strName);
+			pDvr->SetStatus(pDwi->m_status);
+			pDvr->SetStatusStr(pDwi->m_strStatus);
+			pDvr->SetCopying(false);
+		}
+		else
+		{
+			return;
+		}
+	}
+	else
+	{
+		pDwi->m_strId = pDvr->GetId();
+		pDwi->m_strDisk  = diskName.c_str();
+		pDwi->m_strName = pDvr->GetName();
+		pDwi->m_status = pDvr->GetStatus();
+		pDwi->m_strStatus = pDvr->GetStatusStr();
+		pDwi->nFileCount = 0;// pDvr->GetProgressMax();
+		pDwi->nTransFileCount = 0;// pDvr->GetProgressValue();
 	}
 
 	if(!pDvr->IsCopying())

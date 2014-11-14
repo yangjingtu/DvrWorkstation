@@ -68,9 +68,11 @@ public:
 	void SetDevPtr(CDevBase* pDev);
 	void RemoveDevPtr();
 
+	void SyncTime();
 	//√∂æŸ…Ë±∏
 	void MassDev();
 	BOOL IsCopying() { return m_bIsCopying; }
+	void SetCopying(bool isCopying) { m_bIsCopying = isCopying; }
 
 protected:
 

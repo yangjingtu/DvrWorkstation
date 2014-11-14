@@ -1,5 +1,5 @@
 #pragma once
-#include "DvrWnd.h"
+#include "../DvrWnd.h"
 #include <map>
 using namespace std;
 

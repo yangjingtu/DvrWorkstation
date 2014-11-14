@@ -11,16 +11,16 @@
 
 #include <dbt.h>
 
-#include "MsgWnd.h"
-#include "CLoginFrameWnd.h"
+#include "UI/MsgWnd.h"
+#include "UI/CLoginFrameWnd.h"
 #include "dvr/interface.h"
 #include "IniFile.h"
 #include "ShareData.h"
 #include "DvrMgr.h"
-#include "DvrListUI.h"
+#include "UI/DvrListUI.h"
 #include "DataBase/DataBase.h"
-#include "MenuWnd.h"
-#include "AboutWnd.h"
+#include "UI/MenuWnd.h"
+#include "UI/AboutWnd.h"
 #include "ftp/FtpMgr.h"
 #include "Config.h"
 #include "DvrLocation.h"
@@ -52,7 +52,6 @@ CMainFrameWnd::CMainFrameWnd()
 
 	m_pHttpClient = new CNetHttpClient();
 	//m_pHttpClient->Connect(WS2S(SHAREDATA.g_strWebIp.GetString()), SHAREDATA.g_nWebPort);
-
 }
 
 CMainFrameWnd::~CMainFrameWnd()
@@ -81,6 +80,7 @@ void  CMainFrameWnd::OnFinalMessage(HWND /*hWnd*/)
 
 void  CMainFrameWnd::Init() 
 {
+	m_pLogoBtn = static_cast<CButtonUI*>(m_pm.FindControl(_T("logobtn")));
 	m_pCaptionTxt = static_cast<CTextUI*>(m_pm.FindControl(_T("txtCaption")));
 	m_pCloseBtn = static_cast<CButtonUI*>(m_pm.FindControl(_T("closebtn")));
 	m_pMaxBtn = static_cast<CButtonUI*>(m_pm.FindControl(_T("maxbtn")));
@@ -92,7 +92,15 @@ void  CMainFrameWnd::Init()
 	m_pCompanyLbl = static_cast<CLabelUI*>(m_pm.FindControl(_T("lblcompany")));
 	m_pVersionLbl = static_cast<CLabelUI*>(m_pm.FindControl(_T("lblversion")));
 	m_pDateTimeLbl = static_cast<CLabelUI*>(m_pm.FindControl(_T("lbldt")));
+
 	m_pFreeSpace = static_cast<CLabelUI*>(m_pm.FindControl(_T("lblfreespace")));
+	m_pUsedSpace = static_cast<CLabelUI*>(m_pm.FindControl(_T("lblusedspace")));
+	m_pTotalSpace = static_cast<CLabelUI*>(m_pm.FindControl(_T("lbltotalspace")));
+	m_pUsedPecent = static_cast<CLabelUI*>(m_pm.FindControl(_T("lblusedpecent")));
+
+	m_pDrawLbl = static_cast<CLabelUI*>(m_pm.FindControl(_T("lbldraw")));
+
+	m_pPhoneLbl = static_cast<CLabelUI*>(m_pm.FindControl(_T("lblphone")));
 
 	m_pDvrListUI = static_cast<DvrListUI*>(m_pm.FindControl(_T("dvrlist")));
 
@@ -233,8 +241,8 @@ LRESULT  CMainFrameWnd::OnCreate(UINT uMsg, WPARAM wParam, LPARAM lParam, BOOL& 
 
 LRESULT  CMainFrameWnd::OnClose(UINT uMsg, WPARAM wParam, LPARAM lParam, BOOL& bHandled)
 {
-	AVI2FLV.Stop();
-	LOGS(_T("停止转码服务"));
+//	AVI2FLV.Stop();
+//	LOGS(_T("停止转码服务"));
 
 	//在定位模式下，备份配置文件
 	//if(SHAREDATA.g_dbgLevel == LOCATION)
@@ -532,11 +540,13 @@ void CMainFrameWnd::ShowDateTime()
 
 void CMainFrameWnd::ShowCompanyAndVersion()
 {
-	CStdString str;
-	str.Format(_T("%s"), COMPANY, SOFT_VERSION);
-	m_pCompanyLbl->SetText(str);
-	str.Format(_T("%s"), SOFT_VERSION);
-	m_pVersionLbl->SetText(str);
+	SoftWareInfo swi = CONF.GetSWInfo();
+// 	CStdString str;
+// 	str.Format(_T("%s"), COMPANY, SOFT_VERSION);
+	m_pCompanyLbl->SetText(swi.strCpy);
+//	str.Format(_T("%s"), SOFT_VERSION);
+	m_pVersionLbl->SetText(swi.strVersion);
+	m_pPhoneLbl->SetText(swi.strPhone);
 }
 
 void CMainFrameWnd::ShowIPAddr()
@@ -584,8 +594,16 @@ BOOL CMainFrameWnd::InitSystem()
 
 	FTP_CLIENT.Register(CMainFrameWnd::ShowFtpInfo);
 	//运行FTP服务
-	FTP_CLIENT.Run();
-	LOGS(_T("运行FTP服务"));
+	bool bRun = FTP_CLIENT.Run();
+
+#ifdef ONE_DVR
+	if(!bRun)
+	{
+		LOGS(_T("单机版软件： 运行FTP服务失敗"));
+		return FALSE;
+	}
+#endif
+	LOGS(bRun ? _T("运行FTP服务成功") : _T("运行FTP服务失敗"));
 
 	//运行转码服务
 //	wstring strFlvPath = SHAREDATA.g_strFilePath.GetString();
@@ -605,9 +623,14 @@ void CMainFrameWnd::SetInstance(HINSTANCE hInstance)
 
 void CMainFrameWnd::CreateNotifyIcon()
 {
+	CStdString strPath = CPaintManagerUI::GetResourcePath() + _T("..\\ico\\logo.ico");
+	//参照SetIcon
+	HICON hIcon = (HICON)LoadImage(NULL, strPath.GetData() ,IMAGE_ICON,0,0,LR_LOADFROMFILE | LR_CREATEDIBSECTION);
+	::SendMessage(m_hWnd, WM_SETICON, (WPARAM) FALSE, (LPARAM) hIcon); 
+
 	BOOL bt = TRUE;
 	m_NotifyData.cbSize = sizeof(NOTIFYICONDATA);
-	m_NotifyData.hIcon = ::LoadIcon(m_hInstance,MAKEINTRESOURCE(IDI_LOGO));
+	m_NotifyData.hIcon = hIcon; //::LoadIcon(m_hInstance, MAKEINTRESOURCE(IDI_LOGO));
 	m_NotifyData.hWnd = this->m_hWnd;	
 	_tcscpy(m_NotifyData.szTip, gc_AppName);
 	m_NotifyData.uCallbackMessage = WM_NOTIFYDATA;
@@ -624,7 +647,14 @@ void CMainFrameWnd::CreateNotifyIcon()
 
 	LOGS(_T("创建托盘图标完成"));
 
-	this->SetIcon(IDI_LOGO);
+	//this->SetIcon(IDI_LOGO);
+	if(m_pLogoBtn)
+	{
+		LPCTSTR strImg = m_pLogoBtn->GetNormalImage();
+		m_pLogoBtn->SetNormalImage(_T("file='logo.png' mask='0xffffffff'"));
+		m_pLogoBtn->SetPushedImage(_T("file='logo.png' mask='0xffffffff'"));
+		m_pLogoBtn->SetHotImage(_T("file='logo.png' mask='0xffffffff'"));
+	}
 }
 
 void CMainFrameWnd::ShowFtpInfo(const wstring& file, const wstring& info, int precent)
@@ -891,7 +921,7 @@ void CMainFrameWnd::ShowFreeSpace()
 		double dFree = FreeBytes.QuadPart/1024.0/1024.0;
 		if(dFree / 1024.0 > 1)
 		{
-			strInfo.Format(_T("剩余空间:%.0fGB"), dFree/1024.0); 
+			strInfo.Format(_T("%.0fGB"), dFree/1024.0); 
 		}
 		else
 		{
@@ -908,11 +938,21 @@ void CMainFrameWnd::ShowFreeSpace()
 				strMsg.Format(_T("剩余空间不足%.dMB,为保证数据安全将不做任何操作！"),gc_MinSpaceLimit); 
 				ShowMsgInfo(strMsg);
 			}
-			strInfo.Format(_T("剩余空间:%.0fMB"),dFree); 
+			strInfo.Format(_T("%.0fMB"),dFree); 
 		}
 		SHAREDATA.g_dwFreeSpace = dFree;
 		SHAREDATA.g_dwTotalSpace = TotalBytes.QuadPart/1024.0/1024.0;
 		m_pFreeSpace->SetText(strInfo);
+
+		strInfo.Format(_T("%.0fGB"), double(TotalBytes.QuadPart)/1024.0/1024.0/1024.0);
+		m_pTotalSpace->SetText(strInfo);
+		strInfo.Format(_T("%.0fGB"), (TotalBytes.QuadPart - FreeBytes.QuadPart) /1024.0/1024.0/1024.0);
+		m_pUsedSpace->SetText(strInfo);
+		float fUsed = (double)(TotalBytes.QuadPart - FreeBytes.QuadPart) /(double)TotalBytes.QuadPart;
+		strInfo.Format(_T("%.0f%%"), fUsed * 100);
+		m_pUsedPecent->SetText(strInfo);
+	
+		DrawSpacePie(fUsed);
 	}
 }
 
@@ -952,8 +992,8 @@ void CMainFrameWnd::AddUsbDevice( const CString& strName )
 
 	if( strVPID == CMD_VID_PID )
 	{
-		m_pMsgLbl->SetTextColor(CLR_MSG_ADD_DEV);
-		m_pMsgLbl->SetText(_T("检测到DVR设备插入"));
+		//m_pMsgLbl->SetTextColor(CLR_MSG_ADD_DEV);
+		//m_pMsgLbl->SetText(_T("检测到DVR设备插入"));
 
  		if(SHAREDATA.g_dbgLevel == LOCATION)
  			CDvrLocation::Instance().PutDvr();
@@ -975,8 +1015,8 @@ void CMainFrameWnd::RemoveUsbDevice( const CString& strName )
 		return;
 	}
 
-	m_pMsgLbl->SetTextColor(CLR_MSG_DEL_DEV);
-	m_pMsgLbl->SetText(_T("检测到DVR设备拔掉"));
+	//m_pMsgLbl->SetTextColor(CLR_MSG_DEL_DEV);
+	//m_pMsgLbl->SetText(_T("检测到DVR设备拔掉"));
 
 	if( strVPID == CMD_VID_PID )
 	{	
@@ -1063,7 +1103,8 @@ void CMainFrameWnd::CheckUsbHub()
 			pDvr = CDvrMgr::Instance().PutDvr((*it).first);
 			if(pDvr)
 			{
-				Sleep(1000);
+				pDvr->SyncTime();
+				Sleep(200);
 				//枚举它
 				pDvr->MassDev();
 			}
@@ -1082,21 +1123,82 @@ void CMainFrameWnd::CheckUsbHub()
 			diskName = diskName.substr(0 , 2);
 
 			//恢复显示
-			pDvr = CDvrMgr::Instance().GetDvr((*it).first);
-			if(pDvr)
-			{
-				if(pDvr->GetId().IsEmpty())
-				{
-					pDvr->SetStatusStr(_T("无法正确获取设备ID,请重新拔插！"));
-				}
-				else
-				{
-					pDvr->SetDisk(diskName.c_str());
+// 			pDvr = CDvrMgr::Instance().GetDvr((*it).first);
+// 			if(pDvr)
+// 			{
+// 				if(pDvr->GetId().IsEmpty())
+// 				{
+// 					pDvr->SetStatusStr(_T("无法正确获取设备ID,请重新拔插！"));
+// 				}
+// 				else
+// 				{
+// 					pDvr->SetDisk(diskName.c_str());
 					//拷贝数据
 					CDvrMgr::Instance().CopyDvrFile((*it).first, diskName);
-				}
-				m_pDvrListUI->SetInfo(pDvr->GetRow(), pDvr->GetColumn(), pDvr);
-			}
+// 				}
+// 				m_pDvrListUI->SetInfo(pDvr->GetRow(), pDvr->GetColumn(), pDvr);
+//			}
 		}
 	}
+}
+//////////////////////////////////////////////////////////////////////////
+//add by yjt 2014-11-13
+//绘制空间比饼图
+//  nUsed : 已使用百分比 0.00 - 1.00
+//////////////////////////////////////////////////////////////////////////
+void CMainFrameWnd::DrawSpacePie(float nUsed)
+{
+	RECT rcDraw = m_pDrawLbl->GetPos();
+	HDC hdc = ::GetDC(this->m_hWnd);
+	::SetMapMode(hdc, MM_LOMETRIC);
+	POINT PtOrg;
+	PtOrg.x = 0;
+	PtOrg.y = 0;
+	::SetViewportOrgEx(hdc, rcDraw.left, rcDraw.bottom, &PtOrg);
+
+	//画饼区域
+	
+	//孤线的起点和终点
+	POINT hu_beg, hu_end;
+	hu_beg.x = hu_end.x = 0; 
+	hu_beg.y = hu_beg.y = 0; 
+
+	float pi = 3.14f;
+	
+	HBRUSH hbrush = CreateSolidBrush(RGB(249, 54, 247));
+	CBrush* oldbrush2 = (CBrush*)SelectObject(hdc, hbrush); 
+	
+	//直径及中心点
+	int r = rcDraw.right - rcDraw.left ;
+	POINT ptCenter;
+	ptCenter.x = ptCenter.y = r;
+
+	//可用空间
+	hu_beg.x = 0;		//x 不能为r
+	hu_beg.y = r;
+
+	//圆心p  圆上点a  半径a-p   角度x
+	//x = (a.x - p.x)* cos((x/180)*pi) + p.x
+	//y = (a.x - p.x)* sin((x/180)*pi) + p.y
+	hu_end.x = (hu_beg.x - ptCenter.x) * cos(nUsed * 360 / 180 * pi) + ptCenter.x;
+	hu_end.y = (hu_beg.x - ptCenter.x) * sin(nUsed * 360 / 180 * pi) + ptCenter.y;
+	Pie(hdc, 0, 0, r * 2, r * 2,
+		hu_beg.x, hu_beg.y, hu_end.x, hu_end.y);
+
+	::DeleteObject(hbrush);
+	hbrush = CreateSolidBrush(RGB(56, 244, 111));
+	oldbrush2 = (CBrush*)SelectObject(hdc, hbrush);
+	//已用空间
+	Pie(hdc, 0, 0, r * 2, r * 2,
+		hu_end.x, hu_end.y, hu_beg.x, hu_beg.y);
+
+	::SelectObject(hdc, &oldbrush2); 
+	DeleteObject(hbrush);
+
+	CString strPecent;
+	strPecent.Format(_T("%.0f%%"), nUsed*100);
+	SetBkMode(hdc,TRANSPARENT);
+	TextOut(hdc, r, r, strPecent, strPecent.GetLength());
+
+	::ReleaseDC(this->m_hWnd, hdc);
 }

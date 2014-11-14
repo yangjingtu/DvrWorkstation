@@ -1,6 +1,7 @@
 #pragma once
 
 #include <vector>
+#include <map>
 using namespace std;
 
 #include "mmsystem.h"				//导入声音头文件
@@ -29,6 +30,9 @@ using namespace std;
 #define DVR_INSTANCE _T("WellDvr")
 #endif
 ////////////////////////////////////////////////////////
+//是否启动指纹
+#define FINGER_ENABLE  1
+
 
 #define SAFE_DELETE(p)       { if(p) { delete (p);     (p)=NULL; } }
 #define SAFE_DELETE_ARRAY(p) { if(p) { delete[] (p);   (p)=NULL; } }
@@ -43,10 +47,12 @@ using namespace std;
 //V1.02.03 可以随意指定行列，把设备型号提到配置文件中
 //				 注:内蒙也添加了流媒体(Win32)
 //V1.02.05 添加了流媒体(MFC)及monitor
+//V1.02.06 修复了内存泄露和句柄数增长的问题
 //V1.03.01 添加了指纹仪和摄像头
-#define SOFT_VERSION	_T("版本:V1.02.05")
+#define SOFT_VERSION	_T("版本:V1.02.06")
 
 #define COMPANY _T("深圳市威尔电器有限公司")
+#define PHONE _T("客服:4000602856")
 
 #define BK_COLOR RGB(255, 50, 50)
 
@@ -224,6 +230,28 @@ typedef struct tagWebInfo
 	CString strIp;
 	int nPort;
 }WebInfo, *PWebInfo;
+
+typedef struct tagDvrWndInfo{
+	CString m_strId;			//ID
+	CString m_strName;			//NAME
+	CString m_strDisk;			//DiskName
+	DVRSTATUS m_status;			//状态
+	//状态显示字符串
+	CString m_strStatus;
+	int nFileCount;						//總文件數
+	int nTransFileCount;				//已偉輸文件數
+}DvrWndInfo, *PDvrWndInfo;
+
+typedef struct tagSoftWareInfo
+{
+	CString strPhone;
+	CString strCpy;
+	CString strVersion;
+}SoftWareInfo, *PSoftWareInfo;
+
+typedef struct tagSettingInfo{
+	DVRPROP dvrProp;
+}SettingInfo, *PSettingInfo;
 //////////////////////////////////////////////////////////////////////////
 
 

@@ -13,16 +13,10 @@ CHADvr::~CHADvr(void)
 
 }
 
-BOOL CHADvr::GetIDEx(CString &strID)
-{
+BOOL CHADvr::GetID(CString& strID) {
 	char uID[20] = {0};	
 	char ulen = 0;
 
-	//华安的机器读快了会读不到，只能牺牲其它的了
-	Sleep(750);
-	//x6机器太快读不到
-	Sleep(750);
-	
 	BOOL bret = GetValue(GET_HA_ID, uID, &ulen);
 	//我们自己的机器GET_HA_ID获取的不是ID，是时间,长度为12
 	if(ulen == 12)
@@ -49,6 +43,16 @@ BOOL CHADvr::GetIDEx(CString &strID)
 	}
 
 	return bret;
+}
+
+BOOL CHADvr::GetIDEx(CString &strID)
+{
+	//华安的机器读快了会读不到，只能牺牲其它的了
+	Sleep(750);
+	//x6机器太快读不到
+	Sleep(750);
+
+	return GetID(strID);
 }
 
 BOOL CHADvr::SetIDEx(const CString& strID)
@@ -84,6 +88,7 @@ BOOL CHADvr::SetTimeEx()
 	}
 
 	I43IO_ComClose();
+	m_bSetTime = true;
 
 	return bret;
 }
@@ -138,6 +143,11 @@ BOOL CHADvr::SetMassEx()
 //////////////////////////////////////////////////////////////////////////
 //CA4Dvr
 //////////////////////////////////////////////////////////////////////////
+BOOL CA4Dvr::GetIDEx(CString &strID)
+{
+	return GetID(strID);
+}
+
 BOOL CA4Dvr::SetMassEx()
 {
 	char uMass = 1;

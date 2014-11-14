@@ -183,13 +183,13 @@ void CDvrWnd::CopyDir(const CString& strDrive)
 		}
 		else
 		{
-			if(m_nReadFileCount++ < 10)
+			if(m_nReadFileCount++ < 5)
 			{
 				m_strStatus = _T("正在检测[") + strDrive + _T("]， 请稍候...");	
 			}
 			else
 			{
-				m_nReadFileCount = 0;
+				m_nReadFileCount = 5;
 				m_strStatus = _T("没有文件, 可以安全拔掉DVR设备");	
 			}
 		}
@@ -384,8 +384,8 @@ void CDvrWnd::CopyDir(const TCHAR* src, const TCHAR* dst, LPBOOL bCancel)
  			}
 			else
 			{
-				//进行转码
-				AVI2FLV.PutVideo(newdst);
+// 				//进行转码
+// 				AVI2FLV.PutVideo(newdst);
 
 #if AUTO_DELETE
 				//删除文件
@@ -494,6 +494,7 @@ void CDvrWnd::ClearInfo()
 	m_bStopCopy = FALSE;
 	if(m_pDev)
 	{
+		m_pDev->ClearInfo();
 		delete m_pDev;
 		m_pDev = NULL;
 	}
@@ -578,6 +579,15 @@ void CALLBACK CDvrWnd::CopyTimerProc(HWND hwnd,UINT uMsg,UINT_PTR idEvent,DWORD 
 	}
 } 
 
+void CDvrWnd::SyncTime()
+{
+	m_cs.Lock();
+	if(m_pDev && !m_pDev->IsTimeSeted())
+	{
+		m_pDev->SetTimeEx();
+	}
+	m_cs.Unlock();
+}
 void CDvrWnd::MassDev()
 {
 	m_cs.Lock();

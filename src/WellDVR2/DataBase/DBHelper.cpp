@@ -43,6 +43,7 @@ BOOL CDBHelper::Init(const wstring& strConnString)
 		hr = m_pConnection->Open((LPCTSTR)strConnString.c_str(), _T(""), _T(""), adModeUnknown);
 		if(FAILED(hr))
 		{
+			LOGS(_T("数据库连接失败，请检查数据库!"));
 			m_strErrMsg = _T("数据库连接失败，请检查数据库!");
 			return FALSE;
 		}
@@ -52,6 +53,7 @@ BOOL CDBHelper::Init(const wstring& strConnString)
 	{		
 		CString err;
 		err.Format(_T("数据库连接错误！\r\n错误信息:%s:"),e.ErrorMessage());
+		LOGS(_T("数据库连接错误！\r\n错误信息:%s:"),e.ErrorMessage());
 		m_strErrMsg = err;
 		m_pConnection = NULL;
 		return FALSE;
@@ -95,6 +97,7 @@ BOOL CDBHelper::IsConnect()
 		static int nCount = 100;
 		if(nCount-- == 0)
 		{
+			LOGS(_T("数据库重连"));
 			//定期重连,解决数据库连不上卡的问题
 			Init(m_strConn);
 			nCount = 100;
@@ -246,6 +249,9 @@ _RecordsetPtr CDBHelper::ExecProcEx(const wstring& procName, const VecParams& pa
 			(LPCTSTR)e.ErrorMessage());
 		m_strErrMsg = strMsg.GetString();
 		//AfxMessageBox(strMsg);
+		LOGS(_T("错误描述：%s\n错误消息%s"), 
+			(LPCTSTR)e.Description(),
+			(LPCTSTR)e.ErrorMessage());
 	}
 	return NULL;
 }

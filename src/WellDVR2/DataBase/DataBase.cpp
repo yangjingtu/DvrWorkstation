@@ -27,6 +27,7 @@ BOOL CDataBase::Init()
 	//add by yjt 2014-06-13 添加数据库可用性的配置
 	if(!dbi.bEnable)
 	{
+		LOGS(_T("数据库未打开"));
 		m_bInit = false;
 		return TRUE;
 	}
@@ -40,7 +41,7 @@ BOOL CDataBase::Init()
 	strConnect.ReleaseBuffer();
 
 	m_bInit = true;
-
+	LOGS(_T("数据库连接成功!"));
 	return bRlt;
 }
 
@@ -136,10 +137,14 @@ void CDataBase::FillUserVector(_RecordsetPtr record)
 CString CDataBase::QueryNameFormID(const CString& id)
 {
 	if( !IsValid())
+	{
+		LOGS(_T("根据ID查询姓名： 数据库连接不可用！"));
 		return _T("");
+	}
 
 	CString strSql;
 	strSql.Format(_T("select DVRNUM,REALNAME from mycar.DVR where DVRNUM='%s'"), id);
+	LOGS(_T("select DVRNUM,REALNAME from mycar.DVR where DVRNUM='%s'"));
 	_RecordsetPtr record = m_db.Query(strSql.GetString());
 	if(record == NULL)
 	{

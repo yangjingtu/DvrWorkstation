@@ -1,7 +1,7 @@
 #include "stdafx.h"
 #include "RegisterWnd.h"
 
-#include "WellCommon/CharSetHelper.h"
+#include "../WellCommon/CharSetHelper.h"
 
 #include "chmzc.h"
 #pragma comment(lib, "Register.lib")

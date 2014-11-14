@@ -80,6 +80,10 @@ private:
 
 	void ShowCompanyAndVersion();
 	void ShowFreeSpace();
+
+	//画空间使用率饼图
+	void DrawSpacePie(float nUsed);
+
 	//void ShowFtpInfo();
 
 	void CreateNotifyIcon();
@@ -114,6 +118,7 @@ public:
 	CPaintManagerUI m_pm;
 
 private:
+	CButtonUI* m_pLogoBtn;
 	CTextUI* m_pCaptionTxt;
 	CButtonUI* m_pCloseBtn;
 	CButtonUI* m_pMaxBtn;
@@ -126,7 +131,14 @@ private:
 	CLabelUI* m_pCompanyLbl;
 	CLabelUI* m_pVersionLbl;
 	CLabelUI* m_pDateTimeLbl;
+	
 	CLabelUI* m_pFreeSpace;
+	CLabelUI* m_pUsedSpace;
+	CLabelUI* m_pTotalSpace;
+	CLabelUI* m_pUsedPecent;
+	CLabelUI* m_pDrawLbl;
+
+	CLabelUI* m_pPhoneLbl;
 
 	DvrListUI* m_pDvrListUI;
 };

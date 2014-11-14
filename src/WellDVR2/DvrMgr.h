@@ -15,6 +15,7 @@
 #include <algorithm>
 #include <afxmt.h>
 #include "WellCommon/CriLock.h"
+#include "DataDef.h"
 
 using namespace std;
 
@@ -24,16 +25,8 @@ class CDevBase;
 typedef vector<CDvrWnd*> VecDvrWnd;
 typedef VecDvrWnd::iterator VecDvrWndItor;
 
-typedef struct tagDvrWndInfo{
-	CString m_strId;			//ID
-	CString m_strName;			//NAME
-	DVRSTATUS m_status;			//×´Ì¬
-	//×´Ì¬ÏÔÊ¾×Ö·û´®
-	CString m_strStatus;
-}DvrWndInfo, *PDvrWndInfo;
-
 //<´°¿ÚË÷Òý£¬´°¿Ú¶ÔÏó>
-typedef map<int, DvrWndInfo> MapDvrWnd;
+typedef map<int, DvrWndInfo*> MapDvrWnd;
 typedef MapDvrWnd::iterator MapDvrWndItor;
 
 class CDvrMgrBase{

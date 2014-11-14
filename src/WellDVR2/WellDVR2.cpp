@@ -9,12 +9,33 @@ CMiniDumper g_miniDumper( true );
 
 #include "CMainFrameWnd.h"
 #include "ShareData.h"
-#include "RegisterWnd.h"
+#include "UI/RegisterWnd.h"
 #include "chmzc.h"
 #include "ftp/FtpHelper.h"
 #include "network/SockInit.h"
 
+
+#ifdef _DEBUG
+#define DEBUG_CLIENTBLOCK new( _CLIENT_BLOCK, __FILE__, __LINE__)
+#else
+#define DEBUG_CLIENTBLOCK
+#endif
+#define _CRTDBG_MAP_ALLOC
+#include <stdlib.h>
+#include <crtdbg.h>
+#ifdef _DEBUG
+#define new DEBUG_CLIENTBLOCK
+#endif
+
+//检测内存泄露
+void DetectorMemoryLeak()
+{
+	_CrtSetDbgFlag(_CRTDBG_ALLOC_MEM_DF|_CRTDBG_LEAK_CHECK_DF);
+}
+
+
 static void ParseCmdLine(LPSTR lpCmdLine);
+CString g_strFingerPath;
 
 CString GetAppPath()
 {
@@ -23,6 +44,39 @@ CString GetAppPath()
 	int pos = path.ReverseFind('\\');
 	path = path.Mid(0, pos);
 	return path;
+}
+
+void InitFingerPath()
+{
+	CString str = GetAppPath();
+	str += "\\FingerImage";
+	g_strFingerPath = str;
+	BOOL b = CreateDirectory(g_strFingerPath, NULL);
+
+	SYSTEMTIME st = {0};
+	GetLocalTime(&st);
+
+	CString strCurFingerPath = g_strFingerPath;
+	str.Format(_T("%04d%02d%02d"), st.wYear, st.wMonth, st.wDay);
+	strCurFingerPath += _T("\\");
+	strCurFingerPath += str;
+	b = CreateDirectory(strCurFingerPath, NULL);
+}
+
+CString GetCurFingerPath()
+{
+	CString str;
+	CString strCurFingerPath = g_strFingerPath;
+
+	SYSTEMTIME st = {0};
+	GetLocalTime(&st);
+
+	str.Format(_T("%04d%02d%02d"), st.wYear, st.wMonth, st.wDay);
+	strCurFingerPath += _T("\\");
+	strCurFingerPath += str;
+	BOOL b = CreateDirectory(strCurFingerPath, NULL);
+
+	return strCurFingerPath;
 }
 
 //检查只有一个实例运行
@@ -47,9 +101,11 @@ int APIENTRY WinMain(HINSTANCE hInstance, HINSTANCE hPrevInstance, LPSTR lpCmdLi
 	if(!CheckOneInstance())
 		return 0;
 
+	DetectorMemoryLeak();
+
     CPaintManagerUI::SetInstance(hInstance);
     CPaintManagerUI::SetResourcePath(CPaintManagerUI::GetInstancePath() + _T("skin"));
-    CPaintManagerUI::SetResourceZip(_T("skin.zip"));
+ //   CPaintManagerUI::SetResourceZip(_T("skin.zip"));
 
 	LOGS(_T("************检查系统注册信息****************"));
 	//检查注册
@@ -71,7 +127,12 @@ int APIENTRY WinMain(HINSTANCE hInstance, HINSTANCE hPrevInstance, LPSTR lpCmdLi
 	SOCKSUPPORT;
 
     HRESULT Hr = ::CoInitialize(NULL);
-    if( FAILED(Hr) ) return 0;
+    if( FAILED(Hr) ) 
+		return 0;
+
+#if FINGER_ENABLE
+	InitFingerPath();
+#endif
 
 	ParseCmdLine(lpCmdLine);
 

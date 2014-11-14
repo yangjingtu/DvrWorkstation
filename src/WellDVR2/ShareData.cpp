@@ -1,5 +1,6 @@
 #include "stdafx.h"
 #include "ShareData.h"
+#include "Config.h"
 
 CShareData::CShareData(void)
 {
@@ -23,6 +24,10 @@ void CShareData::Init()
 	g_dvrProp.numDvr = DVR_TOTAL_NUM;
 	g_dvrProp.numRow = ROWS;
 	g_dvrProp.numCol = COLS;
+
+#ifndef ONE_DVR
+	g_dvrProp = CONF.GetSettingInfo().dvrProp;
+#endif
 
 	g_dwFreeSpace = -1;
 	g_dwTotalSpace = -1;

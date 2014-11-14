@@ -1,11 +1,11 @@
 #include "StdAfx.h"
 #include <vector>
 #include <math.h>
-#include "DataDef.h"
+#include "../DataDef.h"
 #include "DvrListUI.h"
 
-#include "ShareData.h"
-#include "DvrMgr.h"
+#include "../ShareData.h"
+#include "../DvrMgr.h"
 
 //DVR图片的宽高比例
 #define DVR_IMG_SCALE 243/401
@@ -101,9 +101,12 @@ void DvrListUI::SetDvrPos(RECT rc)
 	//固定列数设置为4的方法
 	int width = rc.right - rc.left;
 	int height = rc.bottom - rc.top;
-
-	width = width / SHAREDATA.g_dvrProp.numCol;
-	height = height / SHAREDATA.g_dvrProp.numRow;
+	
+	//行列添加间隙
+	int nOffSet = 5;
+	
+	width = (width - nOffSet*SHAREDATA.g_dvrProp.numRow) / SHAREDATA.g_dvrProp.numCol;
+	height = (height - nOffSet*SHAREDATA.g_dvrProp.numCol) / SHAREDATA.g_dvrProp.numRow;
 	//值的宽度 = 单个dvr的宽度　－　标签30 - 间隔10 - 图片的宽
 	int widVal = width - height * DVR_IMG_SCALE - 20;
 	for( int it1 = 0; it1 < m_items.GetSize(); it1++ ) 
@@ -117,9 +120,17 @@ void DvrListUI::SetDvrPos(RECT rc)
 		}
 
 		RECT rcPos;
-		rcPos.left = (it1%m_nColumns)*(width) + 5; //4是左边距
+		rcPos.left = (it1%m_nColumns)*(width) + 5 + nOffSet/2; //4是左边距
+		if(it1 % SHAREDATA.g_dvrProp.numCol < SHAREDATA.g_dvrProp.numCol)
+		{
+			rcPos.left += nOffSet * (it1 % SHAREDATA.g_dvrProp.numCol);
+		}
 		rcPos.right = rcPos.left + width;
-		rcPos.top = (it1/m_nColumns)*height + 94;  //90是标题的高度
+		rcPos.top = (it1/m_nColumns)*height + 94 + nOffSet/2;  //90是标题的高度
+		if(it1/SHAREDATA.g_dvrProp.numRow < SHAREDATA.g_dvrProp.numCol)
+		{
+			rcPos.top += nOffSet * (it1/SHAREDATA.g_dvrProp.numRow);
+		}
 		rcPos.bottom = rcPos.top + height;
 
 		pControl->SetPos(rcPos);
@@ -127,6 +138,14 @@ void DvrListUI::SetDvrPos(RECT rc)
 		//注这边不能用findctrol,因为所有的dvr子控件的id是一样的，会造成只有最后一个有效
 		//这里和相关的布局层数有关系
 		CContainerUI* pDvr = static_cast<CContainerUI*>(pControl);
+
+		//设置圆角
+		pDvr->SetBorderSize(1);
+		SIZE sz;
+		sz.cx = 5;
+		sz.cy = 5;
+		pDvr->SetBorderRound(sz);
+
 		CHorizontalLayoutUI* pParent = static_cast<CHorizontalLayoutUI*>(pDvr->GetItemAt(0));
 		if(pParent)
 		{

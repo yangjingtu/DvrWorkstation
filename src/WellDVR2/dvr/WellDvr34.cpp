@@ -33,6 +33,7 @@ BOOL CWellDvr34::GetTimeEx(SYSTEMTIME *pst)
 	}
 
 	I43IO_ComClose();
+	m_bSetTime = true;
 
 ERR_EXIT:
 	return bret;

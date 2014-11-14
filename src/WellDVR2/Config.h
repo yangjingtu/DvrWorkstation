@@ -36,6 +36,9 @@ public:
 	FTPInfo GetFTPInfo(const CString& strSec);
 	int GetDvrType();
 
+	SoftWareInfo GetSWInfo();
+	SettingInfo GetSettingInfo();
+
 	void GetFtpSetting(CString& strImp, int& nHDDef);
 	vector<wstring> GetFtpLevel();
 
@@ -46,6 +49,8 @@ private:
 	void Init();
 	void UnInit();
 	void InitDefConfig();
+	void InitSWInfo();
+	void InitSettingInfo();
 
 	void WriteDefaultFtp(const CString& strSec, int type = 0);
 

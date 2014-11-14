@@ -227,12 +227,13 @@ EnumerateHubError:
 	if (HubInfo != NULL)
 	{
 		FREE(HubInfo);
-		HubInfo;
+		HubInfo = NULL;
 	}
 
-	if (ConnectionInfo)
+	if (ConnectionInfo != NULL)
 	{
 		FREE(ConnectionInfo);
+		ConnectionInfo = NULL;
 	}
 }
 
@@ -255,7 +256,7 @@ VOID CUsbEnum::EnumerateHubPorts(
 )
 {
     ULONG       index;
-    BOOL        success;
+    BOOL        success = false;
 
     PUSB_NODE_CONNECTION_INFORMATION    connectionInfo;
 
@@ -371,10 +372,14 @@ VOID CUsbEnum::EnumerateHubPorts(
 				EnumerateHub(extHubName, connectionInfo, deviceDesc);
 
                 // On to the next port
-                //
+				//
+				FREE(connectionInfo);
                 continue;
             }
         }
+
+		//modified by yjt 2014-10-18 有少许的内存泄露
+		FREE(connectionInfo);
 
 		m_nPort++;
 
@@ -414,6 +419,7 @@ VOID CUsbEnum::EnumerateHubPorts(
 //LPCSTR strSubKey = "SYSTEM\\CurrentControlSet\\Enum\\USB\\VID_0595&PID_2002\\7&52127c6&0&1";
 //LPCSTR strKey = "ParentIdPrefix";//要查询的键名称
 //DWORD keyType = REG_SZ;//定义数据类型
+//modifiey by yjt 2014-10-18 程序句柄数一直在增加，RegQueryValueEx分支添加RegCloseKey(hKey)
 DWORD CUsbEnum::GetRegKeyValue(const wstring& strSubKey, const wstring& strKey, DWORD keyType, LPBYTE strValue, DWORD dwLen)
 {
 	// 打开HKEY_LOCAL_MACHINE主键下的SoftWare\\Knight Studio\\Knight子键
@@ -431,6 +437,7 @@ DWORD CUsbEnum::GetRegKeyValue(const wstring& strSubKey, const wstring& strKey, 
 	ret0 = RegQueryValueEx(hKEY,strKey.c_str(),NULL,&keyType, strValue, &dwLen);
 	if(ret0 != ERROR_SUCCESS)
 	{
+		RegCloseKey(hKEY);
 		//AfxMessageBox("错误：无法查询有关的注册表信息");
 		return 0;
 	}
@@ -954,7 +961,7 @@ void CUsbEnum::AddLeaf(int level, const wstring& text)
 	}
 	wsprintf(msg + level * nOffset, _T("%s\r\n"), text.c_str());
 
-	OutputDebugString(msg);
+	//OutputDebugString(msg);
 }
 
 //从注册表中读取盘符对应的标识串
@@ -970,6 +977,7 @@ vector<wstring> CUsbEnum::ReadDeviceStrings()
  	int j = 0;
 
 	vector<wstring> vecRlt;
+	vecRlt.reserve(26);
 
 	//////////////////////////////////////////////////////////////////////////
 	//盘符对应

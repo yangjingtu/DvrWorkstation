@@ -21,7 +21,7 @@
   <PropertyGroup Label="Globals">
     <ProjectName>WellDVR2</ProjectName>
     <ProjectGuid>{21B017E7-7805-40D5-9D96-AABF572F57D1}</ProjectGuid>
-    <SccProjectName>"%24/电子警察/WorkStation", KNEDAAAA</SccProjectName>
+    <SccProjectName>"%24/WorkStation/src/WellDVR2", ZEAAAAAA</SccProjectName>
     <SccLocalPath>..\..</SccLocalPath>
     <SccProvider>MSSCCI:Microsoft Visual SourceSafe</SccProvider>
   </PropertyGroup>
@@ -297,10 +297,9 @@
     </ProjectReference>
   </ItemDefinitionGroup>
   <ItemGroup>
-    <ClCompile Include="AboutWnd.cpp" />
-    <ClCompile Include="ConvertVideo\Avi2Flv.cpp" />
-    <ClCompile Include="CLoginFrameWnd.cpp" />
     <ClCompile Include="CMainFrameWnd.cpp" />
+    <ClCompile Include="UI\AboutWnd.cpp" />
+    <ClCompile Include="ConvertVideo\Avi2Flv.cpp" />
     <ClCompile Include="Config.cpp" />
     <ClCompile Include="ConfigBase.cpp" />
     <ClCompile Include="ConvertVideo\ConvertVideo.cpp" />
@@ -310,7 +309,6 @@
     <ClCompile Include="DvrWnd.cpp" />
     <ClCompile Include="DvrLocation.cpp" />
     <ClCompile Include="DvrMgr.cpp" />
-    <ClCompile Include="DvrListUI.cpp" />
     <ClCompile Include="dvr\HADvr.cpp" />
     <ClCompile Include="dvr\interface.cpp" />
     <ClCompile Include="dvr\WellDvr34.cpp" />
@@ -320,15 +318,14 @@
     <ClCompile Include="IniFile.cpp" />
     <ClCompile Include="LocationConfig.cpp" />
     <ClCompile Include="log\WriteLog.cpp" />
-    <ClCompile Include="MenuWnd.cpp" />
-    <ClCompile Include="MsgWnd.cpp" />
+    <ClCompile Include="UI\MenuWnd.cpp" />
+    <ClCompile Include="UI\MsgWnd.cpp" />
     <ClCompile Include="network\NetServer.cpp" />
     <ClCompile Include="network\NetClient.cpp" />
     <ClCompile Include="network\NetHttpClient.cpp" />
     <ClCompile Include="network\NetUdp.cpp" />
     <ClCompile Include="network\NetTcpClient.cpp" />
     <ClCompile Include="network\NetBase.cpp" />
-    <ClCompile Include="RegisterWnd.cpp" />
     <ClCompile Include="ShareData.cpp" />
     <ClCompile Include="network\SockInit.cpp" />
     <ClCompile Include="StdAfx.cpp">
@@ -367,6 +364,10 @@
       <PrecompiledHeader Condition="'$(Configuration)|$(Platform)'=='UnicodeDebug|Win32'">NotUsing</PrecompiledHeader>
       <PrecompiledHeader Condition="'$(Configuration)|$(Platform)'=='UnicodeRelease|Win32'">NotUsing</PrecompiledHeader>
     </ClCompile>
+    <ClCompile Include="UI\CLoginFrameWnd.cpp" />
+    <ClCompile Include="UI\DvrListUI.cpp" />
+    <ClCompile Include="UI\KeyFrameWnd.cpp" />
+    <ClCompile Include="UI\RegisterWnd.cpp" />
     <ClCompile Include="USBCtrl\debug.cpp" />
     <ClCompile Include="USBCtrl\UsbEnum.cpp" />
     <ClCompile Include="USBCtrl\UsbHelper.cpp" />
@@ -379,13 +380,12 @@
     <ClCompile Include="WellDVR2.cpp" />
   </ItemGroup>
   <ItemGroup>
-    <ClInclude Include="AboutWnd.h" />
+    <ClInclude Include="UI\AboutWnd.h" />
     <ClInclude Include="ConvertVideo\Avi2Flv.h" />
-    <ClInclude Include="CLoginFrameWnd.h" />
     <ClInclude Include="CMainFrameWnd.h" />
     <ClInclude Include="Config.h" />
     <ClInclude Include="ConfigBase.h" />
-    <ClInclude Include="ControlEx.h" />
+    <ClInclude Include="UI\ControlEx.h" />
     <ClInclude Include="ConvertVideo\ConvertVideo.h" />
     <ClInclude Include="DataBase\DataBase.h" />
     <ClInclude Include="DataDef.h" />
@@ -394,7 +394,6 @@
     <ClInclude Include="DvrWnd.h" />
     <ClInclude Include="DvrLocation.h" />
     <ClInclude Include="DvrMgr.h" />
-    <ClInclude Include="DvrListUI.h" />
     <ClInclude Include="dvr\HADvr.h" />
     <ClInclude Include="dvr\interface.h" />
     <ClInclude Include="dvr\WellDvr34.h" />
@@ -404,15 +403,14 @@
     <ClInclude Include="IniFile.h" />
     <ClInclude Include="LocationConfig.h" />
     <ClInclude Include="log\WriteLog.h" />
-    <ClInclude Include="MenuWnd.h" />
-    <ClInclude Include="MsgWnd.h" />
+    <ClInclude Include="UI\MenuWnd.h" />
+    <ClInclude Include="UI\MsgWnd.h" />
     <ClInclude Include="network\NetServer.h" />
     <ClInclude Include="network\NetClient.h" />
     <ClInclude Include="network\NetHttpClient.h" />
     <ClInclude Include="network\NetUdp.h" />
     <ClInclude Include="network\NetTcpClient.h" />
     <ClInclude Include="network\NetBase.h" />
-    <ClInclude Include="RegisterWnd.h" />
     <ClInclude Include="resource.h" />
     <ClInclude Include="ShareData.h" />
     <ClInclude Include="network\SockInit.h" />
@@ -420,6 +418,10 @@
     <ClInclude Include="MiniDumper.h" />
     <ClInclude Include="tinyxml\tinystr.h" />
     <ClInclude Include="tinyxml\tinyxml.h" />
+    <ClInclude Include="UI\CLoginFrameWnd.h" />
+    <ClInclude Include="UI\DvrListUI.h" />
+    <ClInclude Include="UI\KeyFrameWnd.h" />
+    <ClInclude Include="UI\RegisterWnd.h" />
     <ClInclude Include="USBCtrl\cfgmgr32.h" />
     <ClInclude Include="USBCtrl\usb100.h" />
     <ClInclude Include="USBCtrl\usbdesc.h" />

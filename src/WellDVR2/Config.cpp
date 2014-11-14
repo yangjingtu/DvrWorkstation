@@ -55,7 +55,7 @@ void Config::InitDefConfig()
 	strDef = _T("6");
 	m_Ini.WriteString(strSec, strKey, strDef);
 	strKey = _T("enable");
-	strDef = _T("1");
+	strDef = _T("0");
 	m_Ini.WriteString(strSec, strKey, strDef);
 
 	//FTP
@@ -85,10 +85,11 @@ void Config::Init()
 	m_Ini.SetIniPathName(strFile);
 
 	//ª÷∏¥≈‰÷√Œƒº˛
-	if(SHAREDATA.g_dbgLevel != LOCATION && !Restore())
-	{
-		InitDefConfig();
-	}
+	//»•µÙ≈‰÷√Œƒº˛ª÷∏¥
+// 	if(SHAREDATA.g_dbgLevel != LOCATION && !Restore())
+// 	{
+// 		InitDefConfig();
+// 	}
 
 	CFile theFile;
 	CFileStatus status; 
@@ -101,6 +102,8 @@ void Config::Init()
 //	m_Ini.WriteString(_T("FTP"), _T("enable"), _T("1"));
 	m_Ini.WriteString(_T("FTP1"), _T("enable"), _T("0"));
 	m_Ini.WriteString(_T("FTP2"), _T("enable"), _T("0"));
+//	m_Ini.WriteInt(_T("SETTING"), _T("ROWS"), ROWS);
+//	m_Ini.WriteInt(_T("SETTING"), _T("COLS"), COLS);
 #else
 	m_Ini.WriteString(_T("FTP"), _T("enable"), _T("0"));
 //	m_Ini.WriteString(_T("FTP1"), _T("enable"), _T("1"));
@@ -140,6 +143,7 @@ bool Config::InitFromConfig()
 	SHAREDATA.g_nWebPort = wi.nPort;
 
 	SHAREDATA.g_nDvrType = GetDvrType();
+
 	return true;
 }
 
@@ -283,4 +287,62 @@ CString Config::GetConfigPath()
 CString Config::GetConfigBackUpPath()
 {
 	return GetAppPath() + gc_Config_BackUp;
+}
+
+SoftWareInfo Config::GetSWInfo()
+{
+	InitSWInfo();
+
+	CString strSec(_T("BASEINFO"));
+	CString strKey(_T("PHONE"));
+	SoftWareInfo swi;
+	swi.strPhone = m_Ini.ReadString(strSec, strKey, _T(""));
+	strKey = _T("COMPANY");
+	swi.strCpy = m_Ini.ReadString(strSec, strKey, _T(""));
+	strKey = _T("VERSION");
+	swi.strVersion = m_Ini.ReadString(strSec, strKey, _T(""));
+
+	return swi;
+}
+
+void Config::InitSWInfo()
+{
+	CString strSec(_T("BASEINFO"));
+	CString strKey(_T("PHONE"));
+	CString strPhone = m_Ini.ReadString(strSec, strKey, _T(""));
+	if(strPhone.IsEmpty())
+	{
+		m_Ini.WriteString(strSec, strKey, PHONE);
+		strKey = _T("COMPANY");
+		m_Ini.WriteString(strSec, strKey, COMPANY);
+		strKey = _T("VERSION");
+		m_Ini.WriteString(strSec, strKey, SOFT_VERSION);
+	}
+}
+
+void Config::InitSettingInfo()
+{
+	CString strSec(_T("SETTING"));
+	CString strKey(_T("ROWS"));
+	CString str = m_Ini.ReadString(strSec, strKey, _T(""));
+	if(str.IsEmpty())
+	{
+		m_Ini.WriteInt(strSec, strKey, ROWS);
+		strKey = _T("COLS");
+		m_Ini.WriteInt(strSec, strKey, COLS);
+	}
+}
+
+SettingInfo Config::GetSettingInfo()
+{
+	InitSettingInfo();
+	CString strSec(_T("SETTING"));
+	CString strKey(_T("ROWS"));
+	SettingInfo si;
+	si.dvrProp.numRow = m_Ini.ReadInt(strSec, strKey, ROWS);
+	strKey = _T("COLS");
+	si.dvrProp.numCol = m_Ini.ReadInt(strSec, strKey, COLS);
+	si.dvrProp.numDvr = si.dvrProp.numRow * si.dvrProp.numCol;
+
+	return si;
 }

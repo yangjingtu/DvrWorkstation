@@ -7,6 +7,7 @@
 
 CDevBase::CDevBase() 
 	: m_bMass(false)
+	, m_bSetTime(false)
 {
 	InitInterface();
 }
@@ -45,4 +46,10 @@ BOOL CDevBase::IsDeviceReady()
 	}
 
 	return rlt == I43ERR_OK;
+}
+
+void CDevBase::ClearInfo()
+{
+	m_bSetTime = false;
+	m_bMass = false;
 }

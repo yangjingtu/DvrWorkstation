@@ -30,6 +30,8 @@ public:
 	virtual BOOL GetTimeEx(SYSTEMTIME *pst);
 	virtual BOOL SetMassEx();
 protected:
+	BOOL GetID(CString& strID);
+
 	BOOL GetValue(char uCommandID,char *pData,char *cLen);
 	BOOL SetValue(char uCommandID,char *pData,char cLen);
 };
@@ -37,6 +39,7 @@ protected:
 class CA4Dvr : public CHADvr
 {
 public:
+	virtual BOOL GetIDEx(CString &strID);
 	virtual BOOL SetMassEx();
 protected:
 

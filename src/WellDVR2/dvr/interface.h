@@ -47,6 +47,7 @@ public:
 	virtual BOOL SetIDEx(const CString& strID){ return TRUE; }
 
 	virtual BOOL SetMassEx(){ return TRUE; }
+	virtual BOOL IsTimeSeted(){ return m_bSetTime; }
 	virtual BOOL IsMassed() { return m_bMass; }
 
 	virtual BOOL GetPwd(CString &strPwd){ return TRUE; }
@@ -57,7 +58,7 @@ public:
 
 public:
 	BOOL IsDeviceReady();
-
+	void ClearInfo();
 protected:
 
 	virtual BOOL GetValue(char uCommandID,char *pData,char *cLen){ return TRUE; }
@@ -69,6 +70,7 @@ protected:
 protected:
 	SUsbSetting *pSetting;
 
+	bool m_bSetTime;
 	//是否已枚举成U盘
 	bool m_bMass;
 };
