@@ -1,8 +1,8 @@
-#include "stdafx.h"
+#include "StdAfx.h"
 #include "KeyFrameWnd.h"
 
 
-CKeyFrameWnd::CKeyFrameWnd(const CStdString& strCheck)
+CKeyFrameWnd::CKeyFrameWnd(const CDuiString& strCheck)
 	: m_strCheck(strCheck)
 	, m_bOk(false)
 {
@@ -158,7 +158,7 @@ LRESULT CKeyFrameWnd::OnSize(UINT uMsg, WPARAM wParam, LPARAM lParam, BOOL& bHan
 {
 	SIZE szRoundCorner = m_pm.GetRoundCorner();
 	if( !::IsIconic(*this) && (szRoundCorner.cx != 0 || szRoundCorner.cy != 0) ) {
-		DuiLib::CRect rcWnd;
+		DuiLib::CDuiRect rcWnd;
 		::GetWindowRect(*this, &rcWnd);
 		rcWnd.Offset(-rcWnd.left, -rcWnd.top);
 		rcWnd.right++; rcWnd.bottom++;
@@ -197,16 +197,16 @@ LRESULT CKeyFrameWnd::MessageHandler(UINT uMsg, WPARAM wParam, LPARAM lParam, bo
 
 //////////////////////////////////////////////////////////////////////////
 //ÊäÈëÊý×Ö
-void CKeyFrameWnd::InputNumber(const CStdString& strNumber)
+void CKeyFrameWnd::InputNumber(const CDuiString& strNumber)
 {
-	CStdString strPwd = m_edtPwd->GetText();
+	CDuiString strPwd = m_edtPwd->GetText();
 	strPwd += strNumber;
 	m_edtPwd->SetText(strPwd);
 }
 
 void CKeyFrameWnd::InputBack()
 {
-	CStdString strPwd = m_edtPwd->GetText();
+	CDuiString strPwd = m_edtPwd->GetText();
 	if(strPwd.GetLength() == 0)
 		return;
 	strPwd = strPwd.Left(strPwd.GetLength() - 1);
@@ -215,7 +215,7 @@ void CKeyFrameWnd::InputBack()
 
 void CKeyFrameWnd::InputOk()
 {
-	CStdString strPwd = m_edtPwd->GetText();
+	CDuiString strPwd = m_edtPwd->GetText();
 	if(strPwd.IsEmpty())
 	{
 		m_bOk = false;

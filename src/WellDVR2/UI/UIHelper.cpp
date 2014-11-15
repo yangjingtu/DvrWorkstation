@@ -1,4 +1,4 @@
-#include "stdafx.h"
+#include "StdAfx.h"
 #include "UIHelper.h"
 #include "KeyFrameWnd.h"
 #include "RegisterWnd.h"
@@ -23,7 +23,7 @@ CUIHelper& CUIHelper::Instance()
 	return uh;
 }
 
-bool CUIHelper::Check(const CStdString& strCheck, HWND hPWnd)
+bool CUIHelper::Check(const CDuiString& strCheck, HWND hPWnd)
 {
 	CKeyFrameWnd* pKeyFW = new CKeyFrameWnd(strCheck);
 	pKeyFW->Create(hPWnd, _T(""), UI_WNDSTYLE_DIALOG, 0,0,0,0,0, NULL);

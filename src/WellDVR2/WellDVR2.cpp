@@ -7,7 +7,7 @@
 CMiniDumper g_miniDumper( true );
 #endif
 
-#include "CMainFrameWnd.h"
+#include "UI/CMainFrameWnd.h"
 #include "ShareData.h"
 #include "chmzc.h"
 #include "ftp/FtpHelper.h"

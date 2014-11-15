@@ -297,12 +297,19 @@
     </ProjectReference>
   </ItemDefinitionGroup>
   <ItemGroup>
-    <ClCompile Include="CMainFrameWnd.cpp" />
-    <ClCompile Include="UI\UIHelper.cpp" />
-    <ClCompile Include="UI\AboutWnd.cpp" />
+    <ClCompile Include="gdi\DrawPieChart.cpp" />
+    <ClCompile Include="gdi\DrawEngine.cpp" />
+    <ClCompile Include="gdi\IDraw.cpp" />
+    <ClCompile Include="UI\CMainFrameWnd.cpp" />
+    <ClCompile Include="UI\UIHelper.cpp">
+      <PrecompiledHeader Condition="'$(Configuration)|$(Platform)'=='UnicodeDebug|Win32'">Use</PrecompiledHeader>
+    </ClCompile>
+    <ClCompile Include="UI\AboutWnd.cpp">
+      <PrecompiledHeader Condition="'$(Configuration)|$(Platform)'=='UnicodeDebug|Win32'">Use</PrecompiledHeader>
+    </ClCompile>
     <ClCompile Include="ConvertVideo\Avi2Flv.cpp" />
-    <ClCompile Include="Config.cpp" />
-    <ClCompile Include="ConfigBase.cpp" />
+    <ClCompile Include="config\Config.cpp" />
+    <ClCompile Include="config\ConfigBase.cpp" />
     <ClCompile Include="ConvertVideo\ConvertVideo.cpp" />
     <ClCompile Include="DataBase\DataBase.cpp" />
     <ClCompile Include="DataBase\DBHelper.cpp" />
@@ -313,14 +320,18 @@
     <ClCompile Include="dvr\HADvr.cpp" />
     <ClCompile Include="dvr\interface.cpp" />
     <ClCompile Include="dvr\WellDvr34.cpp" />
-    <ClCompile Include="FileBackUp.cpp" />
+    <ClCompile Include="WellCommon\FileBackUp.cpp" />
     <ClCompile Include="ftp\FtpHelper.cpp" />
     <ClCompile Include="ftp\FtpMgr.cpp" />
-    <ClCompile Include="IniFile.cpp" />
-    <ClCompile Include="LocationConfig.cpp" />
+    <ClCompile Include="WellCommon\IniFile.cpp" />
+    <ClCompile Include="config\LocationConfig.cpp" />
     <ClCompile Include="log\WriteLog.cpp" />
-    <ClCompile Include="UI\MenuWnd.cpp" />
-    <ClCompile Include="UI\MsgWnd.cpp" />
+    <ClCompile Include="UI\MenuWnd.cpp">
+      <PrecompiledHeader Condition="'$(Configuration)|$(Platform)'=='UnicodeDebug|Win32'">Use</PrecompiledHeader>
+    </ClCompile>
+    <ClCompile Include="UI\MsgWnd.cpp">
+      <PrecompiledHeader Condition="'$(Configuration)|$(Platform)'=='UnicodeDebug|Win32'">Use</PrecompiledHeader>
+    </ClCompile>
     <ClCompile Include="network\NetServer.cpp" />
     <ClCompile Include="network\NetClient.cpp" />
     <ClCompile Include="network\NetHttpClient.cpp" />
@@ -365,10 +376,18 @@
       <PrecompiledHeader Condition="'$(Configuration)|$(Platform)'=='UnicodeDebug|Win32'">NotUsing</PrecompiledHeader>
       <PrecompiledHeader Condition="'$(Configuration)|$(Platform)'=='UnicodeRelease|Win32'">NotUsing</PrecompiledHeader>
     </ClCompile>
-    <ClCompile Include="UI\CLoginFrameWnd.cpp" />
-    <ClCompile Include="UI\DvrListUI.cpp" />
-    <ClCompile Include="UI\KeyFrameWnd.cpp" />
-    <ClCompile Include="UI\RegisterWnd.cpp" />
+    <ClCompile Include="UI\CLoginFrameWnd.cpp">
+      <PrecompiledHeader Condition="'$(Configuration)|$(Platform)'=='UnicodeDebug|Win32'">Use</PrecompiledHeader>
+    </ClCompile>
+    <ClCompile Include="UI\DvrListUI.cpp">
+      <PrecompiledHeader Condition="'$(Configuration)|$(Platform)'=='UnicodeDebug|Win32'">Use</PrecompiledHeader>
+    </ClCompile>
+    <ClCompile Include="UI\KeyFrameWnd.cpp">
+      <PrecompiledHeader Condition="'$(Configuration)|$(Platform)'=='UnicodeDebug|Win32'">Use</PrecompiledHeader>
+    </ClCompile>
+    <ClCompile Include="UI\RegisterWnd.cpp">
+      <PrecompiledHeader Condition="'$(Configuration)|$(Platform)'=='UnicodeDebug|Win32'">Use</PrecompiledHeader>
+    </ClCompile>
     <ClCompile Include="USBCtrl\debug.cpp" />
     <ClCompile Include="USBCtrl\UsbEnum.cpp" />
     <ClCompile Include="USBCtrl\UsbHelper.cpp" />
@@ -381,12 +400,15 @@
     <ClCompile Include="WellDVR2.cpp" />
   </ItemGroup>
   <ItemGroup>
+    <ClInclude Include="gdi\DrawPieChart.h" />
+    <ClInclude Include="gdi\DrawEngine.h" />
+    <ClInclude Include="gdi\IDraw.h" />
     <ClInclude Include="UI\UIHelper.h" />
     <ClInclude Include="UI\AboutWnd.h" />
     <ClInclude Include="ConvertVideo\Avi2Flv.h" />
-    <ClInclude Include="CMainFrameWnd.h" />
-    <ClInclude Include="Config.h" />
-    <ClInclude Include="ConfigBase.h" />
+    <ClInclude Include="UI\CMainFrameWnd.h" />
+    <ClInclude Include="config\Config.h" />
+    <ClInclude Include="config\ConfigBase.h" />
     <ClInclude Include="UI\ControlEx.h" />
     <ClInclude Include="ConvertVideo\ConvertVideo.h" />
     <ClInclude Include="DataBase\DataBase.h" />
@@ -399,11 +421,11 @@
     <ClInclude Include="dvr\HADvr.h" />
     <ClInclude Include="dvr\interface.h" />
     <ClInclude Include="dvr\WellDvr34.h" />
-    <ClInclude Include="FileBackUp.h" />
+    <ClInclude Include="WellCommon\FileBackUp.h" />
     <ClInclude Include="ftp\FtpHelper.h" />
     <ClInclude Include="ftp\FtpMgr.h" />
-    <ClInclude Include="IniFile.h" />
-    <ClInclude Include="LocationConfig.h" />
+    <ClInclude Include="WellCommon\IniFile.h" />
+    <ClInclude Include="config\LocationConfig.h" />
     <ClInclude Include="log\WriteLog.h" />
     <ClInclude Include="UI\MenuWnd.h" />
     <ClInclude Include="UI\MsgWnd.h" />
@@ -443,7 +465,6 @@
   <ItemGroup>
     <None Include="..\..\bin\wav\Alarm02.wav" />
     <None Include="..\..\bin\wav\Alarm03.wav" />
-    <None Include="ClassDiagram.cd" />
     <None Include="WellDVR.ico" />
   </ItemGroup>
   <ItemGroup>

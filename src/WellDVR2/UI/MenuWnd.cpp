@@ -1,4 +1,4 @@
-#include "stdafx.h"
+#include "StdAfx.h"
 #include "MenuWnd.h"
 
 CMenuWnd::CMenuWnd() 
@@ -20,7 +20,7 @@ void CMenuWnd::Init(CControlUI* pOwner, POINT pt)
 }
 
 void CMenuWnd::AdjustPostion() {
-	DuiLib::CRect rcWnd;
+	DuiLib::CDuiRect rcWnd;
 	GetWindowRect(m_hWnd, &rcWnd);
 	int nWidth = rcWnd.GetWidth();
 	int nHeight = rcWnd.GetHeight();
@@ -31,7 +31,7 @@ void CMenuWnd::AdjustPostion() {
 	MONITORINFO oMonitor = {};
 	oMonitor.cbSize = sizeof(oMonitor);
 	::GetMonitorInfo(::MonitorFromWindow(*this, MONITOR_DEFAULTTOPRIMARY), &oMonitor);
-	DuiLib::CRect rcWork = oMonitor.rcWork;
+	DuiLib::CDuiRect rcWork = oMonitor.rcWork;
 
 	if( rcWnd.bottom > rcWork.bottom ) {
 		if( nHeight >= rcWork.GetHeight() ) {
@@ -118,7 +118,7 @@ LRESULT CMenuWnd::OnSize(UINT uMsg, WPARAM wParam, LPARAM lParam, BOOL& bHandled
 {
 	SIZE szRoundCorner = m_pm.GetRoundCorner();
 	if( !::IsIconic(*this) && (szRoundCorner.cx != 0 || szRoundCorner.cy != 0) ) {
-		DuiLib::CRect rcWnd;
+		DuiLib::CDuiRect rcWnd;
 		::GetWindowRect(*this, &rcWnd);
 		rcWnd.Offset(-rcWnd.left, -rcWnd.top);
 		rcWnd.right++; rcWnd.bottom++;

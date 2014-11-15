@@ -1,9 +1,13 @@
 #ifndef __UIACTIVEX_H__
 #define __UIACTIVEX_H__
 
-#pragma once
+#define REQUEST_UIACTIVATE				  WM_USER + 10000
 
+#pragma once
+#include <mshtmhst.h>
+#include "downloadmgr.h"
 struct IOleObject;
+
 
 namespace DuiLib {
 /////////////////////////////////////////////////////////////////////////////////////
@@ -26,7 +30,7 @@ public:
 
 class UILIB_API CActiveXUI : public CControlUI, public IMessageFilterUI
 {
-    friend CActiveXCtrl;
+    friend class CActiveXCtrl;
 public:
     CActiveXUI();
     virtual ~CActiveXUI();
@@ -52,12 +56,18 @@ public:
     void DoPaint(HDC hDC, const RECT& rcPaint);
 
     void SetAttribute(LPCTSTR pstrName, LPCTSTR pstrValue);
+	void SetExternalUIHandler(IDocHostUIHandler* handler);
+	void SetDownloadManager(IDownloadManager* handler);
+	void SetDispatchHandler(IDispatch* handler);
+
+	void SetHwnd(HWND hwnd){m_hwnd = hwnd;}
+	HWND GetHwnd(){return m_hwnd;}
 
     LRESULT MessageHandler(UINT uMsg, WPARAM wParam, LPARAM lParam, bool& bHandled);
 
 protected:
-    void ReleaseControl();
-    bool DoCreateControl();
+    virtual void ReleaseControl();
+    virtual bool DoCreateControl();
 
 protected:
     CLSID m_clsid;
@@ -66,7 +76,13 @@ protected:
     bool m_bDelayCreate;
     IOleObject* m_pUnk;
     CActiveXCtrl* m_pControl;
-    HWND m_hwndHost;
+    HWND m_hwndHost;	
+	IDocHostUIHandler* m_HostUIHandler;
+	IDownloadManager* m_pDownMan;
+	IDispatch*	m_pHostDispatch;
+	
+private:
+	HWND m_hwnd;
 };
 
 } // namespace DuiLib

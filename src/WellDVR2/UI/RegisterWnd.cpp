@@ -1,4 +1,4 @@
-#include "stdafx.h"
+#include "StdAfx.h"
 #include "RegisterWnd.h"
 
 #include "../WellCommon/CharSetHelper.h"
@@ -133,7 +133,7 @@ LRESULT CRegisterWnd::OnSize(UINT uMsg, WPARAM wParam, LPARAM lParam, BOOL& bHan
 {
 	SIZE szRoundCorner = m_pm.GetRoundCorner();
 	if( !::IsIconic(*this) && (szRoundCorner.cx != 0 || szRoundCorner.cy != 0) ) {
-		DuiLib::CRect rcWnd;
+		DuiLib::CDuiRect rcWnd;
 		::GetWindowRect(*this, &rcWnd);
 		rcWnd.Offset(-rcWnd.left, -rcWnd.top);
 		rcWnd.right++; rcWnd.bottom++;
@@ -188,7 +188,7 @@ bool CRegisterWnd::OnRegister()
 	CRichEditUI* pText = static_cast<CRichEditUI*>(m_pm.FindControl(_T("regCodeTxt")));
 	if(pText == NULL)
 		return false;
-	CStdString strCode = pText->GetText();
+	CDuiString strCode = pText->GetText();
 	if(strCode.IsEmpty())
 	{
 		pText->SetFocus();

@@ -1,5 +1,4 @@
 #pragma once
-#include "stdafx.h"
 using namespace DuiLib;
 
 class CMsgWnd : public CWindowWnd, public INotifyUI, public IMessageFilterUI

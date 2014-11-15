@@ -202,7 +202,7 @@ void DvrListUI::OnClick(const POINT& pt)
 	
 //	HitItem(pControl);
 
-	CStdString strT;
+	CDuiString strT;
 	strT.Format(_T("当前选择的位置 %d,%d "), m_selectRow + 1, m_selectCol + 1);
 	SHAREDATA.g_pMainFrame->ShowMsgInfo(strT);
 }
@@ -468,7 +468,7 @@ void DvrListUI::SetInfo_Active(const DvrItemCtrl& dic, CDvrWnd* dvr)
 		int r = 0;
 		if(v > 0)
 		{
-			CStdString strP;
+			CDuiString strP;
 			r = dvr->GetProgressMax();
 			r = (v / r) * 100;
 			if(r > 100)
@@ -515,7 +515,7 @@ void DvrListUI::SetInfo_Nomal(const DvrItemCtrl& dic, CDvrWnd* dvr)
 		int r = 0;
 		if(v > 0)
 		{
-			CStdString strP;
+			CDuiString strP;
 			r = dvr->GetProgressMax();
 			r = v / r * 100;
 			if(r > 100)
@@ -555,7 +555,7 @@ void DvrListUI::SetInfo_Stop(const DvrItemCtrl& dic, CDvrWnd* dvr)
 
 void DvrListUI::OnBtnClick(TNotifyUI& msg)
 {
-	CStdString name = msg.pSender->GetName();
+	CDuiString name = msg.pSender->GetName();
 	if(name == _T("btnStop"))
 	{
 		int index = -1;

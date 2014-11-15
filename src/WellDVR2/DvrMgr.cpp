@@ -3,13 +3,13 @@
 #include "dvr/interface.h"
 #include <comutil.h>
 #include "DataBase/DataBase.h"
-#include "IniFile.h"
-#include "Config.h"
+#include "WellCommon/IniFile.h"
+#include "config/Config.h"
 #include "dvr/DvrFactory.h"
 #include "USBCtrl/UsbHelper.h"
 #include <sstream>
 using namespace std;
-#include "LocationConfig.h"
+#include "config/LocationConfig.h"
 #include "dvr/interface.h"
 #include "ShareData.h"
 

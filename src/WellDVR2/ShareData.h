@@ -7,7 +7,7 @@
 #pragma once
 
 #include "DataDef.h"
-#include "CMainFrameWnd.h"
+#include "UI/CMainFrameWnd.h"
 
 #define SHAREDATA CShareData::Instance()
 

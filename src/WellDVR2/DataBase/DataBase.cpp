@@ -1,9 +1,9 @@
 #include "stdafx.h"
 #include "DataBase.h"
-#include "../IniFile.h"
+#include "../WellCommon/IniFile.h"
 #include "../DataDef.h"
 #include "../ShareData.h"
-#include "../Config.h"
+#include "../config/Config.h"
 
 
 CDataBase::CDataBase(void)

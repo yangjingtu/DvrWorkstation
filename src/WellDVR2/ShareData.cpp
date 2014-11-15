@@ -1,6 +1,6 @@
 #include "stdafx.h"
 #include "ShareData.h"
-#include "Config.h"
+#include "config/Config.h"
 
 CShareData::CShareData(void)
 {

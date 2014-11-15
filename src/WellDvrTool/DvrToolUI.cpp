@@ -195,7 +195,7 @@ LRESULT  CDvrToolUI::OnSize(UINT uMsg, WPARAM wParam, LPARAM lParam, BOOL& bHand
 {
 	SIZE szRoundCorner = m_pm.GetRoundCorner();
 	if( !::IsIconic(*this) && (szRoundCorner.cx != 0 || szRoundCorner.cy != 0) ) {
-		DuiLib::CRect rcWnd;
+		DuiLib::CDuiRect rcWnd;
 		::GetWindowRect(*this, &rcWnd);
 		rcWnd.Offset(-rcWnd.left, -rcWnd.top);
 		rcWnd.right++; rcWnd.bottom++;
@@ -213,7 +213,7 @@ LRESULT  CDvrToolUI::OnGetMinMaxInfo(UINT uMsg, WPARAM wParam, LPARAM lParam, BO
 	MONITORINFO oMonitor = {};
 	oMonitor.cbSize = sizeof(oMonitor);
 	::GetMonitorInfo(::MonitorFromWindow(*this, MONITOR_DEFAULTTOPRIMARY), &oMonitor);
-	DuiLib::CRect rcWork = oMonitor.rcWork;
+	CDuiRect rcWork = oMonitor.rcWork;
 	LPMINMAXINFO lpMMI = (LPMINMAXINFO) lParam;
 
  	lpMMI->ptMaxPosition.x = rcWork.left;
@@ -332,7 +332,7 @@ LRESULT CDvrToolUI::OnMyDeviceChange(WPARAM wParam, LPARAM lParam)
 
 void CDvrToolUI::EnableUI(bool bEnable)
 {
-	DuiLib::CStdString strShow(_T("密码校验通过后可用"));
+	DuiLib::CDuiString strShow(_T("密码校验通过后可用"));
 	strShow = bEnable ? _T("") : strShow;
 
 	m_edtPwdNew->SetEnabled(bEnable);
@@ -354,7 +354,7 @@ void CDvrToolUI::EnableUI(bool bEnable)
 
 void CDvrToolUI::OnClickBtnCheck()
 {
-	CStdString strPwd = m_edtPwd->GetText();
+	CDuiString strPwd = m_edtPwd->GetText();
 	if( strPwd.IsEmpty() )
 	{
 		EnableUI(false);
@@ -404,14 +404,14 @@ void CDvrToolUI::OnClickBtnCheck()
 
 void CDvrToolUI::OnClickBtnPwd()
 {
-	CStdString strPwd = m_edtPwdNew->GetText();
+	CDuiString strPwd = m_edtPwdNew->GetText();
 	if( strPwd.IsEmpty() )
 	{
 		m_lblMsg->SetText(_T("请输入新密码！"));
 		return;
 	}
 
-	CStdString strPwdOld = m_edtPwd->GetText();
+	CDuiString strPwdOld = m_edtPwd->GetText();
 	if(strPwdOld == strPwd)
 	{
 		m_lblMsg->SetText(_T("新密码和原始密码一致，请确认！"));
@@ -439,7 +439,7 @@ void CDvrToolUI::OnClickBtnPwd()
 
 void CDvrToolUI::OnClickBtnDevId()
 {
-	CStdString strId = m_edtDevId->GetText();
+	CDuiString strId = m_edtDevId->GetText();
 	if( strId.IsEmpty() )
 	{
 		m_lblMsg->SetText(_T("请输入新设备ID！"));
@@ -463,7 +463,7 @@ void CDvrToolUI::OnClickBtnDevId()
 
 void CDvrToolUI::OnClickBtnPoliceId()
 {
-	CStdString strId = m_edtPoliceId->GetText();
+	CDuiString strId = m_edtPoliceId->GetText();
 	if( strId.IsEmpty() )
 	{
 		m_lblMsg->SetText(_T("请输入新警员ID！"));
@@ -516,7 +516,7 @@ void CDvrToolUI::OnClickBtnSync()
 	SYSTEMTIME   st;   
 	::GetSystemTime(&st);
 
-	CStdString str;
+	CDuiString str;
 	str.Format(_T("同步时间成功：%d-%d-%d %02d:%02d:%02d"),st.wYear, st.wMonth,st.wDay,st.wHour+8 > 24 ? st.wHour - 16 : st.wHour + 8,st.wMinute,st.wSecond);
  
 	if(m_pDvr->SetTimeEx())

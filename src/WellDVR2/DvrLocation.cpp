@@ -1,9 +1,9 @@
 #include "stdafx.h"
 #include "DvrLocation.h"
 #include "ShareData.h"
-#include "Config.h"
+#include "config/Config.h"
 #include "USBCtrl/UsbHelper.h"
-#include "LocationConfig.h"
+#include "config/LocationConfig.h"
 
 CDvrLocation::CDvrLocation(void)
 	: m_xx(-1)
@@ -103,7 +103,7 @@ bool CDvrLocation::PutDvr()
 	}
 	dvr->SetStatus(DVR_DERICT);
 
-	CStdString str;
+	CDuiString str;
 	str.Format(_T("请选择当前DVR设置插入的位置, 当前位置: %d, %d"), x+1, y+1);
 	SHAREDATA.g_pMainFrame->ShowMsgInfo(str);
 

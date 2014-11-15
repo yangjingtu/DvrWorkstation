@@ -1,6 +1,6 @@
 #include "stdafx.h"
 #include "FtpMgr.h"
-#include "../Config.h"
+#include "../config/Config.h"
 #include "../ShareData.h"
 #include "../WellCommon/AviHelper.h"
 #include "../WellCommon/StringHelper.h"

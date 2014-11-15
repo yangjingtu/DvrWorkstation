@@ -1,4 +1,4 @@
-#include "stdafx.h"
+#include "StdAfx.h"
 #include "ControlEx.h"
 #include "AboutWnd.h"
 
@@ -91,7 +91,7 @@ LRESULT CAboutWnd::OnSize(UINT uMsg, WPARAM wParam, LPARAM lParam, BOOL& bHandle
 {
 	SIZE szRoundCorner = m_pm.GetRoundCorner();
 	if( !::IsIconic(*this) && (szRoundCorner.cx != 0 || szRoundCorner.cy != 0) ) {
-		DuiLib::CRect rcWnd;
+		DuiLib::CDuiRect rcWnd;
 		::GetWindowRect(*this, &rcWnd);
 		rcWnd.Offset(-rcWnd.left, -rcWnd.top);
 		rcWnd.right++; rcWnd.bottom++;

@@ -4,7 +4,7 @@
 class CKeyFrameWnd: public CWindowWnd, public INotifyUI, public IMessageFilterUI
 {
 public:
-	CKeyFrameWnd(const CStdString& strCheck);
+	CKeyFrameWnd(const CDuiString& strCheck);
 	~CKeyFrameWnd(void);
 
 	LPCTSTR GetWindowClassName() const;
@@ -32,13 +32,13 @@ public:
 
 	bool IsOk() { return m_bOk; }
 private:
-	void InputNumber(const CStdString& strNumber);
+	void InputNumber(const CDuiString& strNumber);
 	void InputBack();
 	void InputOk();
 
 private:
 	bool m_bOk;
-	CStdString m_strCheck;
+	CDuiString m_strCheck;
 
 public:
 	CPaintManagerUI m_pm;
