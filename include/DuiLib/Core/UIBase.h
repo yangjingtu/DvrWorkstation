@@ -77,7 +77,9 @@ public:
     void ShowWindow(bool bShow = true, bool bTakeFocus = true);
     UINT ShowModal();
     void Close(UINT nRet = IDOK);
-    void CenterWindow();
+    void CenterWindow();	// ?¨®?D¡ê??¡ì3?¨¤??1?¨¢??
+	void FullScreen();		// ¨¨??¨¢¡ê??¡ì3?¨¤??1?¨¢??
+	void RestoreScreen();	// ¨¨??¨¢o¨®???¡ä
     void SetIcon(UINT nRes);
 
     LRESULT SendMessage(UINT uMsg, WPARAM wParam = 0, LPARAM lParam = 0L);
@@ -99,6 +101,7 @@ protected:
     HWND m_hWnd;
     WNDPROC m_OldWndProc;
     bool m_bSubclassed;
+	CDuiRect m_RestoreRect;
 };
 
 } // namespace DuiLib

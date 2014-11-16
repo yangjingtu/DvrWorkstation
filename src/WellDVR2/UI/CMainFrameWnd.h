@@ -6,7 +6,7 @@ using namespace DuiLib;
 class CNetClient;
 class DvrListUI;
 
-class CMainFrameWnd : public CWindowWnd, public INotifyUI
+class CMainFrameWnd : public CWindowWnd, public INotifyUI, public IMessageFilterUI
 {
 public:
 	enum { 
@@ -51,6 +51,8 @@ public:
 
 	LRESULT HandleMessage(UINT uMsg, WPARAM wParam, LPARAM lParam);
 
+	LRESULT MessageHandler(UINT uMsg, WPARAM wParam, LPARAM lParam, bool& bHandled);
+
 	void SetInstance(HINSTANCE hInstance);
 
 	LRESULT OnTimer(UINT uMsg, WPARAM wParam, LPARAM lParam);
@@ -68,14 +70,14 @@ public:
 
 	bool Alert(const CString& strMsg, const CString& title = _T(""), const CString& img = _T(""));
 
-	wstring GetIpAddr();
+	bool GetIpAddr(wstring &strIp);
 private:
 	BOOL InitSystem();
 
 	void RegisgerDvr();
 
 	void ShowDateTime();
-	void ShowIPAddr();
+	void ShowNetwork();
 
 	void ShowCompanyAndVersion();
 	void ShowFreeSpace();
@@ -131,7 +133,11 @@ private:
 	
 	CLabelUI* m_pMsgLbl;
 	CProgressUI* m_pFtpPro;
+	
+	CLabelUI* m_pNetConnLbl;
 	CLabelUI* m_pIpLbl;
+	CLabelUI* m_pNetstatusLbl;
+
 	CLabelUI* m_pCompanyLbl;
 	CLabelUI* m_pVersionLbl;
 	CLabelUI* m_pDateTimeLbl;

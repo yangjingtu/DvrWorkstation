@@ -3,7 +3,7 @@
     <VerticalLayout bordersize="3" width="400" height="600">
         <HorizontalLayout bordersize="2" height="60" bkimage="background-bottom.png" bkcolor="#FF48729C" bordercolor="#00008080" focusbordercolor="#000000FF">
             <Button name="btnClose" float="true" pos="282,9,0,0" width="30" height="30" bkimage="close.png" textcolor="#FF000000" disabledtextcolor="#FFA7A6AA" align="center" normalimage="file=&apos;close.png&apos; fade=&apos;200&apos;" hotimage="close.png" pushedimage="file=&apos;close.png&apos; fade=&apos;200&apos;" />
-            <Label float="true" pos="8,-3,0,0" width="55" height="55" bkimage="key-logo.png" textcolor="#FF000000" disabledtextcolor="#FFA7A6AA" />
+          <Label float="true" pos="8,-3,0,0" width="55" height="55" bkimage="key-logo.png" textcolor="#FF000000" disabledtextcolor="#FFA7A6AA" />
         </HorizontalLayout>
         <VerticalLayout bordersize="3" height="490" bkimage="bg.png" inset="5,0,5,10">
             <HorizontalLayout height="80">

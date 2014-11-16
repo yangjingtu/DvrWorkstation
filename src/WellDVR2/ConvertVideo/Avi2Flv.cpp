@@ -111,7 +111,8 @@ void CAvi2Flv::InsertMediaInfo(const wstring &strIn, const wstring& strOut)
 
 	CTime tm = CTime::GetCurrentTime();
 	mi.strDataUploadTime = tm.Format(_T("%Y-%m-%d %H:%M:%S"));
-	mi.strDataIp = SHAREDATA.g_pMainFrame->GetIpAddr().c_str();
+	wstring strIp;
+	mi.strDataIp = SHAREDATA.g_pMainFrame->GetIpAddr(strIp), strIp.c_str();
 	mi.strFileName = strIn.substr(strIn.rfind(_T("\\")) + 1);
 
 	CFile localFile;

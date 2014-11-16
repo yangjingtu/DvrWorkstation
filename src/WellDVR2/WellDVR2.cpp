@@ -133,12 +133,10 @@ int APIENTRY WinMain(HINSTANCE hInstance, HINSTANCE hPrevInstance, LPSTR lpCmdLi
 
     CMainFrameWnd* pFrame = new CMainFrameWnd();
     if( pFrame == NULL ) return 0;
-
 	pFrame->SetInstance(hInstance);
-
-    pFrame->Create(NULL, _T(""), UI_WNDSTYLE_FRAME, 0L, 0, 0, 1024, 738);
+    pFrame->Create(NULL, _T(""), UI_WNDSTYLE_FRAME, 0L, 0, 0, 1280, 1024);
     pFrame->CenterWindow();
-
+//	pFrame->ShowWindow(true);
     ::ShowWindow(*pFrame, SW_SHOWMAXIMIZED);
 
     CPaintManagerUI::MessageLoop();

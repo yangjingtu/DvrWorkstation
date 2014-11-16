@@ -1,8 +1,6 @@
 #ifndef __UIBUTTONGIF_H__
 #define __UIBUTTONGIF_H__
 
-#pragma once
-
 #include "UIButton.h"
 #include "utils/GifHandler.h"
 

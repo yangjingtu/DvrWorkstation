@@ -80,9 +80,9 @@ using namespace std;
 //常量定义
 /////////////////////////////////////////////////////////////////////////////////////
 #ifdef ONE_DVR
-const CString gc_AppName(_T("执法数据采集终端 - 个人版"));
+const CString gc_AppName(_T("执法数据采集平台 - 个人版"));
 #else
-const CString gc_AppName(_T("执法数据采集终端"));
+const CString gc_AppName(_T("执法数据采集平台"));
 #endif
 
 const CString gc_Config(_T("\\dvr_cfg.ini"));

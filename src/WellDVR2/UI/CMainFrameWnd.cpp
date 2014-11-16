@@ -7,8 +7,6 @@
 #include <exdisp.h>
 #include <comdef.h>
 
-#include <Afxsock.h>
-
 #include <dbt.h>
 
 #include "UIHelper.h"
@@ -30,6 +28,8 @@
 
 #include "../ConvertVideo/Avi2Flv.h"
 #include "../network/NetHttpClient.h"
+#include "../gdi/DrawEngine.h"
+#include "../network/NetUtil.h"
 
 #include <sstream>
 using namespace std;
@@ -68,10 +68,12 @@ LPCTSTR CMainFrameWnd::GetWindowClassName() const
 UINT  CMainFrameWnd::GetClassStyle() const 
 { 
 	return CS_DBLCLKS; 
+	//return UI_CLASSSTYLE_DIALOG;
 }
 	
 void  CMainFrameWnd::OnFinalMessage(HWND /*hWnd*/) 
 { 
+	m_pm.RemovePreMessageFilter(this);
 	delete this; 
 }
 
@@ -85,7 +87,11 @@ void  CMainFrameWnd::Init()
 	m_pMinBtn = static_cast<CButtonUI*>(m_pm.FindControl(_T("minbtn")));
 	
 	m_pMsgLbl = static_cast<CLabelUI*>(m_pm.FindControl(_T("lblmsg")));
+
+	m_pNetConnLbl = static_cast<CLabelUI*>(m_pm.FindControl(_T("lblNet")));
+	m_pNetstatusLbl = static_cast<CLabelUI*>(m_pm.FindControl(_T("lblnetstatus")));
 	m_pIpLbl = static_cast<CLabelUI*>(m_pm.FindControl(_T("lblip")));
+
 	m_pCompanyLbl = static_cast<CLabelUI*>(m_pm.FindControl(_T("lblcompany")));
 	m_pVersionLbl = static_cast<CLabelUI*>(m_pm.FindControl(_T("lblversion")));
 	m_pDateTimeLbl = static_cast<CLabelUI*>(m_pm.FindControl(_T("lbldt")));
@@ -124,7 +130,7 @@ void  CMainFrameWnd::OnPrepare()
 	SHAREDATA.g_pMainFrame = this;
 
 	ShowDateTime();
-	ShowIPAddr();
+	ShowNetwork();
 	ShowCompanyAndVersion();
 
 	if(!InitSystem())
@@ -205,6 +211,7 @@ LRESULT  CMainFrameWnd::OnCreate(UINT uMsg, WPARAM wParam, LPARAM lParam, BOOL& 
 	::SetWindowLong(*this, GWL_STYLE, styleValue | WS_CLIPSIBLINGS | WS_CLIPCHILDREN);
 
 	m_pm.Init(m_hWnd);
+	m_pm.AddPreMessageFilter(this);
 	CDialogBuilder builder;
 	CDialogBuilderCallbackEx cb;
 	CControlUI* pRoot = builder.Create(_T("mainframe.xml"), (UINT)0, &cb, &m_pm);
@@ -370,18 +377,18 @@ LRESULT  CMainFrameWnd::OnSysCommand(UINT uMsg, WPARAM wParam, LPARAM lParam, BO
 	BOOL bZoomed = ::IsZoomed(*this);
 	LRESULT lRes = CWindowWnd::HandleMessage(uMsg, wParam, lParam);
 	if( ::IsZoomed(*this) != bZoomed ) {
-		if( !bZoomed ) {
-			CControlUI* pControl = static_cast<CControlUI*>(m_pm.FindControl(_T("maxbtn")));
-			if( pControl ) pControl->SetVisible(false);
-			pControl = static_cast<CControlUI*>(m_pm.FindControl(_T("restorebtn")));
-			if( pControl ) pControl->SetVisible(true);
-		}
-		else {
-			CControlUI* pControl = static_cast<CControlUI*>(m_pm.FindControl(_T("maxbtn")));
-			if( pControl ) pControl->SetVisible(true);
-			pControl = static_cast<CControlUI*>(m_pm.FindControl(_T("restorebtn")));
-			if( pControl ) pControl->SetVisible(false);
-		}
+// 		if( !bZoomed ) {
+// 			CControlUI* pControl = static_cast<CControlUI*>(m_pm.FindControl(_T("maxbtn")));
+// 			if( pControl ) pControl->SetVisible(false);
+// 			pControl = static_cast<CControlUI*>(m_pm.FindControl(_T("restorebtn")));
+// 			if( pControl ) pControl->SetVisible(true);
+// 		}
+// 		else {
+// 			CControlUI* pControl = static_cast<CControlUI*>(m_pm.FindControl(_T("maxbtn")));
+// 			if( pControl ) pControl->SetVisible(true);
+// 			pControl = static_cast<CControlUI*>(m_pm.FindControl(_T("restorebtn")));
+// 			if( pControl ) pControl->SetVisible(false);
+// 		}
 	}
 	return lRes;
 }
@@ -412,6 +419,12 @@ LRESULT  CMainFrameWnd::HandleMessage(UINT uMsg, WPARAM wParam, LPARAM lParam)
 	if( m_pm.MessageHandler(uMsg, wParam, lParam, lRes) ) return lRes;
 	return CWindowWnd::HandleMessage(uMsg, wParam, lParam);
 }
+
+LRESULT CMainFrameWnd::MessageHandler(UINT uMsg, WPARAM wParam, LPARAM lParam, bool& bHandled)
+{
+	return S_OK;
+}
+
 
 //Alt快捷键处理
 //1. Alt + shift + C  调出配置工具
@@ -490,10 +503,13 @@ LRESULT CMainFrameWnd::OnTimer(UINT uMsg, WPARAM wParam, LPARAM lParam)
 		CheckDeviceDataTimer();
 		break;
 	default:
-		break;
+		//其余定时器交由系统处理
+		LRESULT lRes = 0;
+		if( m_pm.MessageHandler(uMsg, wParam, lParam, lRes) ) return lRes;
+		return CWindowWnd::HandleMessage(uMsg, wParam, lParam);
 	}
 
-	return 0;
+	return 0;	
 }
 
 void CMainFrameWnd::ShowMsgInfo(const CDuiString& msg)
@@ -524,11 +540,21 @@ void CMainFrameWnd::ShowCompanyAndVersion()
 	m_pPhoneLbl->SetText(swi.strPhone);
 }
 
-void CMainFrameWnd::ShowIPAddr()
+void CMainFrameWnd::ShowNetwork()
 {
-	CDuiString strIp(_T("IP: "));
-	strIp += GetIpAddr().c_str();
-	m_pIpLbl->SetText(strIp);
+	wstring strIp;
+	if(GetIpAddr(strIp))
+	{
+		m_pIpLbl->SetText(strIp.c_str());
+		m_pNetstatusLbl->SetText(_T("网络连接正常"));
+		m_pNetConnLbl->SetBkImage(_T("net-connect.png"));
+	}
+	else
+	{
+		m_pIpLbl->SetText(strIp.c_str());
+		m_pNetstatusLbl->SetText(_T("网络连接异常"));
+		m_pNetConnLbl->SetBkImage(_T("net-disconnect.png"));
+	}
 }
 
 BOOL CMainFrameWnd::InitSystem()
@@ -703,10 +729,19 @@ void CMainFrameWnd::CheckDeviceDataTimer()
 		tdLog.strIsusing = _T("Y");
 		tdLog.strRemark = _T(" ");
 		tdLog.strBattalion = _T(" ");
-		tdLog.strDescribe = _T("采集终端正常运行");
 		tdLog.strSquadron = _T(" ");
 		tdLog.strDetachment = _T(" ");
-		tdLog.strTerminalIp = GetIpAddr().c_str();
+		wstring strIp;
+		if(GetIpAddr(strIp))
+		{
+			tdLog.strTerminalIp = strIp.c_str();
+			tdLog.strDescribe = _T("采集终端正常运行");
+		}
+		else
+		{
+			tdLog.strTerminalIp = strIp.c_str();
+			tdLog.strDescribe = _T("采集网络异常");
+		}
 
 		DB.InsertLog(tdLog);
 		LOG(_T("向后台写入终端日志"));
@@ -991,25 +1026,15 @@ CString CMainFrameWnd::GetVID_PIDString(const CString &str,  wchar_t  chSplit )
 	return s2;
 }
 
-wstring CMainFrameWnd::GetIpAddr()
+bool CMainFrameWnd::GetIpAddr(wstring &strIp)
 {
-	if(!AfxSocketInit()) 
-	{ 
-		return _T(""); 
-	}
-
-	char szHostName[MAX_PATH + 1];
-	gethostname(szHostName, MAX_PATH);				//得到计算机名
-	hostent *p = gethostbyname(szHostName);		//从计算机名得到主机信息
-	if(p == NULL)
+	strIp = CNetUtil::GetLocalIpAddr();
+	if(strIp == _T("127.0.0.1"))
 	{
-		return _T("");
+		strIp = _T("采集站未联网");
+		return false;
 	}
-
-	//将32位IP转化为字符串IP
-	char *pIP = inet_ntoa(*(in_addr *)p->h_addr_list[0]);
-	wstring wcsIp = S2WS(pIP);
-	return wcsIp;
+	return true;
 }
 
 //检测USB HUB的状态
@@ -1091,7 +1116,7 @@ void CMainFrameWnd::CheckUsbHub()
 	}
 }
 
-#include "../gdi/DrawEngine.h"
+
 //////////////////////////////////////////////////////////////////////////
 //add by yjt 2014-11-13
 //绘制空间比饼图
@@ -1099,12 +1124,15 @@ void CMainFrameWnd::CheckUsbHub()
 //////////////////////////////////////////////////////////////////////////
 void CMainFrameWnd::DrawSpacePie(float nUsed)
 {
+	//四舍五入
+	float usedPercent = nUsed + 0.005;
+
 	PieInfo pi[2];
-	pi[0].angle = nUsed * 360;
+	pi[0].angle = usedPercent * 360;
 	pi[0].backColor = RGB(249, 54, 247);
 	pi[0].textColor = RGB(0,128,100);
 	pi[0].title = _T("已用");
-	pi[1].angle = 360 - (int)(nUsed * 360);
+	pi[1].angle = 360 - (int)(usedPercent * 360);
 	pi[1].backColor = RGB(56, 244, 111);
 	pi[1].textColor = RGB(255,0,100);
 	pi[1].title = _T("可用");

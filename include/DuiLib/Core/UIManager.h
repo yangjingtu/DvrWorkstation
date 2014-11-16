@@ -93,17 +93,6 @@ typedef struct tagTFontInfo
     TEXTMETRIC tm;
 } TFontInfo;
 
-typedef struct tagTImageInfo
-{
-    HBITMAP hBitmap;
-    int nX;
-    int nY;
-	int delay;
-    bool alphaChannel;
-    CDuiString sResType;
-    DWORD dwMask;
-} TImageInfo;
-
 // Structure for notifications from the system
 // to the control implementation.
 typedef struct tagTEventUI
@@ -128,6 +117,17 @@ typedef struct tagTRelativePosUI
 	int nZoomXPercent;
 	int nZoomYPercent;
 }TRelativePosUI;
+
+typedef struct tagTImageInfo
+{
+	HBITMAP hBitmap;
+	int nX;
+	int nY;
+	int delay;
+	bool alphaChannel;
+	CDuiString sResType;
+	DWORD dwMask;
+} TImageInfo;
 
 // Listener interface
 class INotifyUI
@@ -187,6 +187,7 @@ public:
 	int GetTransparent() const;
     void SetTransparent(int nOpacity);
     void SetBackgroundTransparent(bool bTrans);
+	bool GetBackgroundTransparent();
     bool IsShowUpdateRect() const;
     void SetShowUpdateRect(bool show);
 

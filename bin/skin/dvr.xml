@@ -1,11 +1,13 @@
 <?xml version="1.0" encoding="utf-8" standalone="yes" ?>
-<Window size="343,200" sizebox="4,4,6,6" caption="0,0,0,30" roundcorner="5,5" defaultfontcolor="#FF00FFFF">
+<Window size="686,400" sizebox="4,4,6,6" caption="0,0,0,30" roundcorner="5,5">
     <Font name="宋体" size="8" bold="false" italic="false" />
     <Container focusbordercolor="#000000FF" inset="5,5,5,5">
         <HorizontalLayout bordersize="2" padding="5,5,5,5">
             <VerticalLayout name="cUI1">
                 <VerticalLayout name="cUI2" bkimage="file=&apos;dvr.png&apos;">
-                    <Container />
+                  <Container>
+                    <ButtonGif float="true" width="100" height="40" NormalGifFile="cd.gif"/>
+                  </Container>
                     <Label name="lbldev" text="无设备" textcolor="#00FF0000" disabledtextcolor="#FFA7A6AA" align="center" />
                     <Container />
                 </VerticalLayout>

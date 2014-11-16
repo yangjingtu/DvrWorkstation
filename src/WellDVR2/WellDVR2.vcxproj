@@ -300,6 +300,7 @@
     <ClCompile Include="gdi\DrawPieChart.cpp" />
     <ClCompile Include="gdi\DrawEngine.cpp" />
     <ClCompile Include="gdi\IDraw.cpp" />
+    <ClCompile Include="network\NetUtil.cpp" />
     <ClCompile Include="UI\CMainFrameWnd.cpp" />
     <ClCompile Include="UI\UIHelper.cpp">
       <PrecompiledHeader Condition="'$(Configuration)|$(Platform)'=='UnicodeDebug|Win32'">Use</PrecompiledHeader>
@@ -403,6 +404,7 @@
     <ClInclude Include="gdi\DrawPieChart.h" />
     <ClInclude Include="gdi\DrawEngine.h" />
     <ClInclude Include="gdi\IDraw.h" />
+    <ClInclude Include="network\NetUtil.h" />
     <ClInclude Include="UI\UIHelper.h" />
     <ClInclude Include="UI\AboutWnd.h" />
     <ClInclude Include="ConvertVideo\Avi2Flv.h" />
